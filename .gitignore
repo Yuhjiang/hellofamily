@@ -1,0 +1,6 @@
+__pycache__
+.idea
+*log.txt
+venv
+secret.py
+migrations
