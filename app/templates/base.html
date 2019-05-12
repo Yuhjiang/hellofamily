@@ -11,6 +11,33 @@
     {% endblock head %}
 </head>
 <body>
+{% block nav %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand mb-0 h1" href="/">Hell Family</a>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mr-5">
+            {% block navbar %}
+            <li class="nav-item active">
+                <a class="nav-link" href="/">主页</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/topic">论坛</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/login">登录</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/register">注册</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/auth/profile">个人信息</a>
+            </li>
+            {% endblock navbar %}
+        </ul>
+    </div>
+</nav>
+{% endblock %}
 
 {% block content %}{% endblock content %}
 

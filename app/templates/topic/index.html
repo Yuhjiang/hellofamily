@@ -3,12 +3,14 @@
 {% block title %}Hello Family{% endblock %}
 
 {% block content %}
+    <br>
 <div class="row">
     <div class="col-8">
         <div class="container">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary">全部帖子</button>
+                <button type="button" class="btn btn-primary">全部帖子</button>
             </div>
+            <br><br>
             <div id="id-topic-list">
             {% for topic in topics %}
                 <div class="card">

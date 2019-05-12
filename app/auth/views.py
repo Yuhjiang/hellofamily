@@ -12,7 +12,11 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
-            return redirect('/')
+            login_user(user, True)
+            next:str = request.args.get('next')
+            if next is None or not next.startswith('/'):
+                next = url_for('topic.index')
+            return redirect(next)
     return render_template('auth/login.html', form=form)
 
 

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form_row %}
+
+{% block title %}Hello Family 编辑帖子 {% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/mditor@1.0.5/dist/css/mditor.min.css" />
+{% endblock %}
+
+{% block content %}
+<div class="markdown-area">
+    <form action="/topic/add" method="post" class="form" role="form">
+        {{ form.csrf_token }}
+        {{ render_form_row([form.title]) }}
+        <textarea name="body" id="editor"></textarea>
+        {{ render_form_row([form.submit]) }}
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://unpkg.zhimg.com/mditor@1.0.5/dist/js/mditor.min.js"></script>
+    <script>
+        var mditor = Mditor.fromTextarea(document.getElementById('editor'));
+    </script>
+{% endblock %}
