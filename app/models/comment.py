@@ -1,14 +1,11 @@
 from .. import db
 from datetime import datetime
-from .comment import Comment
 
 
-class Topic(db.Model):
-    __tablename__ = 'topics'
+class Comment(db.Model):
+    __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text)
-    title = db.Column(db.String(64))
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comment', backref='author', lazy='dynamic')
-
+    topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'))

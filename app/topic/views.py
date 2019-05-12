@@ -1,10 +1,11 @@
-from .forms import TopicForm
+from .forms import TopicForm, CommentForm
 from ..models.user import User
 from ..models.topic import Topic
 from flask_login import login_required, login_user, current_user
 from .. import db
 from . import topic
-from flask import render_template, redirect
+from ..models.comment import Comment
+from flask import render_template, redirect, url_for
 
 
 @topic.route('/')
@@ -21,15 +22,35 @@ def add():
     form = TopicForm()
     if form.validate_on_submit():
         t = Topic(title=form.title.data,
-                  body=form.body.data,
-                  author_id=current_user.id,
-                      )
+                  body='\n'+form.body.data,
+                  author_id=current_user.id
+                  )
         db.session.add(t)
         db.session.commit()
-        return redirect('/')
+        return redirect('/topic')
     return render_template('topic/add.html', form=form)
 
 
-@topic.route('/detail/<int:id>', methods=['GET'])
+@topic.route('/detail/<int:id>')
 def detail(id):
-    return redirect('/')
+    form = CommentForm()
+    t = Topic.query.get(id)
+    comments = Comment.query.filter_by(topic_id=t.id).all()
+
+    return render_template('topic/detail.html', topic=t, comments=comments,  form=form)
+
+
+@topic.route('/comment/add', methods=['POST'])
+@login_required
+def comment_add():
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            body=form.body.data,
+            topic_id=form.topic_id.data,
+            author_id=current_user.id
+        )
+        db.session.add(comment)
+        db.session.commit()
+
+    return redirect(url_for('topic.detail', id=form.topic_id.data))

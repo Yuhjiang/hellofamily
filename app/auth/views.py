@@ -25,7 +25,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    )
         db.session.add(user)
         db.session.commit()
     return render_template('auth/login.html', form=form)

@@ -7,6 +7,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
 import hashlib
 from .topic import Topic
+from .comment import Comment
 
 
 class User(UserMixin, db.Model):
@@ -16,6 +17,7 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     topics = db.relationship('Topic', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='comment_author', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}: {}>'.format(self.id, self.username)
