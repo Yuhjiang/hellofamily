@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {% block styles %}
         {{ bootstrap.load_css() }}
-        <link type="text/css" rel="stylesheet" href="../static/css/hellofamily.css">
+        <link type="text/css" rel="stylesheet" href="/static/css/hellofamily.css">
     {% endblock styles %}
     <title>{% block title %}{% endblock title %}</title>
     {% endblock head %}
@@ -39,9 +39,33 @@
     </div>
 </nav>
 {% endblock %}
-
-{% block content %}{% endblock content %}
-
+<br>
+<div class="container">
+{% block sidebar %}
+<div id="sidebar">
+        <div class="card">
+            <div class="card-header">用户信息</div>
+            <div class="card-body">
+                <div class="user-icon">
+                    <img src="https://avatars3.githubusercontent.com/u/28681745?v=4&s=120">
+                </div>
+                <p class="card-text">
+                    管理员账户
+                </p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <a href="/topic/add">
+                <button type="button" class="btn btn-success" href="/topic/add">添加话题</button>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+{% endblock content %}
+</div>
 {% block scripts %}
     {{ bootstrap.load_js() }}
 {% endblock scripts %}

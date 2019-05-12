@@ -10,12 +10,16 @@
 
 {% block content %}
 <div class="markdown-area">
-    <form action="/topic/add" method="post" class="form" role="form">
+    <div class="row">
+        <div class="container">
+        <form action="/topic/add" method="post" class="form" role="form">
         {{ form.csrf_token }}
         {{ render_form_row([form.title]) }}
         <textarea name="body" id="editor"></textarea>
         {{ render_form_row([form.submit]) }}
-    </form>
+        </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

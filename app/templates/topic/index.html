@@ -3,31 +3,25 @@
 {% block title %}Hello Family{% endblock %}
 
 {% block content %}
-    <br>
 <div class="row">
-    <div class="col-9 panel">
-        <div class="container">
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary">全部帖子</button>
-            </div>
-            <br><br>
-            <div id="id-topic-list">
-            {% for topic in topics %}
-                <div class="card">
-                    <div class="card-body">
-                        <a class="topic-title" href="{{ url_for('topic.detail', id=topic.id) }}">
-                            {{ topic.title }}
-                        </a>
-                    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-primary">全部帖子</button>
                 </div>
-            {% endfor %}
+            </div>
+            <br>
+            <div id="id-topic-list">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                {% for topic in topics %}
+                    <li class="list-group-item"><a href="{{ url_for('topic.detail', id=topic.id) }}">{{ topic.title }}</a></li>
+                {% endfor %}
+                </ul>
             </div>
         </div>
     </div>
-    <div class="col-3 panel">
-        <a href="/topic/add">
-            <button type="button" class="btn btn-success center" href="/topic/add">添加话题</button>
-        </a>
     </div>
 </div>
 {% endblock %}

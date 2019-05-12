@@ -63,7 +63,7 @@ input:focus{
     width: 490px;
     height: 100%;
     min-height: 390px;
-    background: linear-gradient(45deg, #9a444e, #e06267);
+    background: linear-gradient(45deg, #00609f, #0075c2);
     position: relative;
     float: right;
 }
