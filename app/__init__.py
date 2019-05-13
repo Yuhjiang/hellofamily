@@ -45,3 +45,4 @@ def create_app(config_name):
     app.register_blueprint(topic_blueprint, url_prefix='/topic')
 
     return app
+
