@@ -18,7 +18,7 @@ mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'user.login'
 migrate = Migrate()
 
 
@@ -37,11 +37,11 @@ def create_app(config_name):
 
     # 注册蓝图
     from .main import main as main_blueprint
-    from .auth import auth as auth_blueprint
+    from .user import user as user_blueprint
     from .topic import topic as topic_blueprint
 
     app.register_blueprint(main_blueprint)
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(user_blueprint, url_prefix='/user')
     app.register_blueprint(topic_blueprint, url_prefix='/topic')
 
     return app

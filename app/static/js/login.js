@@ -22,11 +22,12 @@ function register() {
         status[0].style.top = 35 + "px"
         status[1].style.top = -5 + "px"
         onoff = !onoff
-        form.action = '/auth/register'
+        form.action = '/user/register'
         var password = form.querySelector('#password')
         var password2 = form.querySelector('#password2')
         if (password2 === null) {
             password.insertAdjacentHTML('afterend', passwordTemplate)
+            password.insertAdjacentHTML('beforebegin', emailTemplate)
         }
     } else {
         // form.submit()
@@ -44,12 +45,18 @@ function login() {
         status[1].style.top = 35 + "px"
         status[0].style.top = -5 + "px"
         onoff = !onoff
-        form.action = '/auth/login'
+        form.action = '/user/login'
         var password = form.querySelector('#password2')
+        var email = form.querySelector('#email')
         password.remove()
+        email.remove()
     }
 }
 
 var passwordTemplate = `
     <input class="form-control" id="password2" name="password2" required="" type="password" value="" placeholder="confirm password">
+`
+
+var emailTemplate = `
+    <input class="form-control" id="email" name="email" required="" type="text" placeholder="email">
 `

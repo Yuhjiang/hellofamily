@@ -9,10 +9,11 @@ class Config(object):
     """
     SECRET_KEY = secret.secret_key
     MAIL_SERVER = 'smtp.exmail.qq.com'
-    MAIL_PORT = '465'
+    MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_USERNAME = secret.mail_username
     MAIL_PASSWORD = secret.mail_password
+    FLASK_MAIL_SUBJECT_PREFIX = '[HelloFamily]'
     FLASK_MAIL_SENDER = secret.mail_username
     FLASK_ADMIN = secret.mail_username
     SQLALCHEMY_TRACK_MODIFICATIONS = False
