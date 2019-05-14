@@ -24,7 +24,7 @@ def created_topic(author_id):
         topics = json.loads(v)
         return topics
     else:
-        topics = Topic.query.filter_by(author_id=author_id).order_by(Topic.created_time.desc()).limit().all()
+        topics = Topic.query.filter_by(author_id=author_id).order_by(Topic.created_time.desc()).limit(10).all()
         v = []
         for t in topics:
             t = t.json()

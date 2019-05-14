@@ -47,6 +47,8 @@ python3 init_mysql.py
 service supervisor restart
 service nginx restart
 
+celery -A app.tasks worker --loglevel=info
+
 echo 'succsss'
 echo 'ip'
 hostname -I
