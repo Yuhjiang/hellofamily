@@ -3,7 +3,7 @@ from ..models.user import User
 from ..models.topic import Topic
 from flask_login import login_required, login_user, current_user
 from .. import db
-from . import topic
+from . import topic, created_topic, commented_topic
 from ..models.comment import Comment
 from flask import render_template, redirect, url_for
 
@@ -58,6 +58,9 @@ def comment_add():
 @topic.route('/profile')
 @login_required
 def profile():
-    topics = Topic.query.filter_by(author_id=current_user.id).order_by(Topic.created_time.desc()).all()
+    # topics = Topic.query.filter_by(author_id=current_user.id).order_by(Topic.created_time.desc()).all()
+    topics = created_topic(author_id=current_user.id)
+    # comments = Comment.query.filter_by(author_id=current_user.id).order_by(Comment.created_time.desc()).all()
+    commented_topics = commented_topic(author_id=current_user.id)
 
-    return render_template('topic/profile.html', topics=topics)
+    return render_template('topic/profile.html', topics=topics, commented_topics=commented_topics)

@@ -10,5 +10,12 @@ class Topic(db.Model):
     title = db.Column(db.String(64))
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    comments = db.relationship('Comment', backref='topic', lazy='dynamic')
 
+    def json(self):
+        d = dict()
+        for attr, column in self.__mapper__.c.items():
+            if hasattr(self, attr):
+                v = getattr(self, attr)
+                d[attr] = v
+        return d
