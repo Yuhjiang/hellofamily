@@ -29,7 +29,7 @@
                     <i style="top: 35px">注册</i>
                 </div>
                 <span>
-                    <form action="/user/login" method="post" class="form" role="form">
+                    <form action method="post" class="form" role="form">
                         {{ form.csrf_token }}
                         <br>
                         <input class="form-control" id="username" name="username" required="" type="text" value="" placeholder="username">
@@ -37,6 +37,8 @@
                         <button class="btn btn-primary" onclick="login()" style="margin-right: 20px;">LOG IN</button>
                         <button class="btn btn-primary" onclick="register()">SIGN IN</button>
                     </form>
+                    <br>
+                    <a href="/user/reset"><p>忘记密码?</p></a>
                 </span>
             </div>
 

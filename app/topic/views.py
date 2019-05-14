@@ -9,7 +9,6 @@ from flask import render_template, redirect, url_for
 
 
 @topic.route('/')
-@login_required
 def index():
     topics = Topic.query.order_by(Topic.created_time.desc()).all()
 
@@ -54,3 +53,11 @@ def comment_add():
         db.session.commit()
 
     return redirect(url_for('topic.detail', id=form.topic_id.data))
+
+
+@topic.route('/profile')
+@login_required
+def profile():
+    topics = Topic.query.filter_by(author_id=current_user.id).order_by(Topic.created_time.desc()).all()
+
+    return render_template('topic/profile.html', topics=topics)

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, FileField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, FileField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from ..models.user import User
 from wtforms import ValidationError
@@ -31,3 +31,40 @@ class EditProfileAdminForm(FlaskForm):
 class UpdateIcon(FlaskForm):
     icon = FileField('上传头像')
     submit = SubmitField('上传')
+
+
+class ChangePasswordForm(FlaskForm):
+    """
+    已知原始密码，重新设置新密码
+    """
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    password = PasswordField('New password', validators=[DataRequired(), EqualTo('password2', message='两次密码不一致')])
+    password2 = PasswordField('Confirm your password', validators=[DataRequired()])
+    submit = SubmitField('Update Password')
+
+
+class PasswordResetRequestForm(FlaskForm):
+    """
+    原始密码忘记，通过邮箱找回密码
+    """
+    email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
+    submit = SubmitField('Reset Password')
+
+
+class PasswordResetForm(FlaskForm):
+    """
+    原始密码忘记，重新设置新密码
+    """
+    password = PasswordField('New password', validators=[DataRequired(), EqualTo('password2', message='两次密码不一致')])
+    password2 = PasswordField('Confirm your password', validators=[DataRequired()])
+    submit = SubmitField('Update Password')
+
+
+class ChangeEmailForm(FlaskForm):
+    email = StringField('New Email', validators=[DataRequired(), Length(1, 64), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Update Email Address')
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.dat).first():
+            raise ValidationError('Email already registered.')

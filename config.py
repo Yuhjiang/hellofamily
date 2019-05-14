@@ -17,6 +17,8 @@ class Config(object):
     FLASK_MAIL_SENDER = secret.mail_username
     FLASK_ADMIN = secret.mail_username
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    CELERY_BROKER_URL = 'redis://localhost'
+    CELERY_RESULT_BACKEND = 'redis://localhost'
 
     @staticmethod
     def init_app(app):

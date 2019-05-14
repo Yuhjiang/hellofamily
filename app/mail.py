@@ -1,5 +1,5 @@
-from tasks import send_async
 from flask import render_template, current_app
+from .tasks import send_async
 
 
 def send_email(to, subject, template, **kwargs):
@@ -9,4 +9,5 @@ def send_email(to, subject, template, **kwargs):
     send_async.delay(subject=subject,
                      author=app.config['FLASK_MAIL_SENDER'],
                      to=to,
-                     plain=html_body)
+                     plain=html_body,
+                     rich=html_body)

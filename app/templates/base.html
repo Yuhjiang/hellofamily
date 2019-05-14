@@ -15,15 +15,12 @@
 <body>
 {% block nav %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand mb-0 h1" href="/">Hello Family</a>
+    <a class="navbar-brand mb-0 h1" href="/topic">Hello Family</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto mr-5">
             {% block navbar %}
             <li class="nav-item active">
-                <a class="nav-link" href="/">主页</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/topic">论坛</a>
             </li>
             {% if current_user.is_authenticated %}
@@ -39,7 +36,10 @@
                 <a class="nav-link" href="/user/register">注册</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/user/profile">个人信息</a>
+                <a class="nav-link" href="/user/setting">个人信息</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/topic/profile">最近活动</a>
             </li>
             {% endblock navbar %}
         </ul>
@@ -61,10 +61,14 @@
             <div class="card-header">用户信息</div>
             <div class="card-body">
                 <div class="user-icon">
-                    <img src="{{ current_user.icon }}">
+                    {% if current_user.is_authenticated %}
+                        <img src="{{ current_user.icon }}">
+                    {% else %}
+                        <img src="/static/images/helloproject.ico">
+                    {% endif %}
                 </div>
                 <p class="card-text">
-                    管理员账户
+                    {{ current_user.about_me }}
                 </p>
             </div>
         </div>

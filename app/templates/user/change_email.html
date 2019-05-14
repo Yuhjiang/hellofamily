@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block title %} Hello Family 修改邮箱 {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+    <div class="card">
+        <div class="card-header">修改邮箱</div>
+        <div class="card-body">
+            {{ render_form(form) }}
+    </div>
+</div>
+    </div>
+</div>
+{% endblock %}

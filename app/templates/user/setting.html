@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form_row %}
+{% block title %}{{ current_user.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                修改个人信息
+            </div>
+            <div class="card-body">
+                <form action="/user/information" method="post" class="form" role="form">
+                    {{ icon_form.csrf_token() }}
+                    {{ render_form_row([info_form.location]) }}
+                    {{ render_form_row([info_form.about_me]) }}
+                    {{ render_form_row([info_form.submit]) }}
+                </form>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <div class="card-header">修改头像</div>
+            <div class="card-body">
+                <form action="/user/icon" method="post" class="form" role="form" enctype="multipart/form-data">
+                    {{ icon_form.csrf_token() }}
+                    {{ render_form_row([icon_form.icon]) }}
+                    {{ render_form_row([icon_form.submit]) }}
+                </form>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="btn-group" role="group">
+                    <a href="/user/reset">
+                        <button type="button" class="btn btn-danger">修改密码</button>
+                    </a>
+                    <a href="/user/change_email">
+                        <button type="button" class="btn btn-warning">修改邮箱</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

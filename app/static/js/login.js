@@ -45,7 +45,7 @@ function login() {
         status[1].style.top = 35 + "px"
         status[0].style.top = -5 + "px"
         onoff = !onoff
-        form.action = '/user/login'
+        form.action = ''
         var password = form.querySelector('#password2')
         var email = form.querySelector('#email')
         password.remove()

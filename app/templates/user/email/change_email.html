@@ -1,0 +1,7 @@
+<p>Dear {{ user.username }},</p>
+<p>To confirm your new email address <a href="{{ '192.168.8.200' +  url_for('user.change_email', token=token) }}">click here</a>.</p>
+<p>Alternatively, you can paste the following link in your browser's address bar:</p>
+<p>{{ '192.168.8.200' +  url_for('user.change_email', token=token) }}</p>
+<p>Sincerely,</p>
+<p>The HelloFamily Team</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>
