@@ -1,8 +1,8 @@
 <p>Dear {{ user.username }},</p>
 <p>Welcome to <b>Flasky</b>!</p>
-<p>To confirm your account please <a href="{{ 'http://hellofamily.club' + url_for('user.confirm', token=token, _external=True)}}">click here</a>.</p>
+<p>To confirm your account please <a href="{{ 'http://hellofamily.club' + url_for('user.confirm', token=token)}}">click here</a>.</p>
 <p>Alternatively, you can paste the following link in your browser's address bar:</p>
-<p>{{ 'http://hellofamily.club' + url_for('user.confirm', token=token, _external=True)}}</p>
+<p>{{ 'http://hellofamily.club' + url_for('user.confirm', token=token)}}</p>
 <p>Sincerely,</p>
 <p>The Hello Family Team</p>
 <p><small>Note: replies to this email address are not monitored.</small></p>
