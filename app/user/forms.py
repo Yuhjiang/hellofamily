@@ -22,6 +22,8 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[Email(), DataRequired(), Length(1, 64)])
 
 
+
+
 class EditProfileAdminForm(FlaskForm):
     location = StringField('地区', validators=[Length(0, 64)])
     about_me = TextAreaField('关于我')
