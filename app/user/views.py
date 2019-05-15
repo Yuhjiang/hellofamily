@@ -65,7 +65,7 @@ def profile():
     icon_form = UpdateIcon()
     info_form.location.data = current_user.location
     info_form.about_me.data = current_user.about_me
-    infor_form.name.data = current_user.name
+    info_form.name.data = current_user.name
 
     return render_template('user/setting.html', info_form=info_form, icon_form=icon_form)
 
