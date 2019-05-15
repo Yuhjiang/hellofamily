@@ -21,7 +21,7 @@ mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'user.login'
+login_manager.login_view = 'people.login'
 migrate = Migrate()
 admin = Admin(name='hellofamily', template_mode='bootstrap3')
 
@@ -34,7 +34,7 @@ class UserView(ModelView):
         return current_user.is_authenticated and current_user.is_administrator()
 
 
-admin.add_view(ModelView(Users, db.session, name='users'))
+admin.add_view(UserView(Users, db.session, name='users'))
 
 
 def create_app(config_name):
