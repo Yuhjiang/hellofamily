@@ -1,6 +1,7 @@
 from .. import db
 from datetime import datetime
 from .comment import Comment
+from .reply import Reply
 
 
 class Topic(db.Model):
@@ -11,6 +12,7 @@ class Topic(db.Model):
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='topic', lazy='dynamic')
+    replies = db.relationship('Reply', backref='topic', lazy='dynamic')
 
     def json(self):
         d = dict()

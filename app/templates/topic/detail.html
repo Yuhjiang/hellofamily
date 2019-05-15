@@ -40,7 +40,6 @@
             <form action="{{ url_for('topic.comment_add') }}" method="post" class="form" role="form">
                 {{ form.csrf_token() }}
                 <input type="hidden" name="topic_id" value="{{ topic.id }}">
-                <input type="hidden" name="topic_user_id" value="{{ topic.author_id }}">
                 <textarea name="body" id="editor"></textarea>
                 <button class="btn btn-primary float-right">评论</button>
             </form>

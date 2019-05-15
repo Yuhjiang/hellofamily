@@ -9,3 +9,12 @@ class Reply(db.Model):
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow())
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'))
+
+    def json(self):
+        d = dict()
+        for attr, column in self.__mapper__.c.items():
+            if hasattr(self, attr):
+                v = getattr(self, attr)
+                d[attr] = v
+        return d

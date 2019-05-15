@@ -8,7 +8,6 @@ class Comment(db.Model):
     body = db.Column(db.Text)
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    commented_user = db.Column(db.Integer)
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'))
 
     def json(self):

@@ -5,6 +5,7 @@ from flask_login import login_required, login_user, current_user
 from .. import db
 from . import topic, created_topic, commented_topic, replied_comment, users_from_comment
 from ..models.comment import Comment
+from ..models.reply import Reply
 from flask import render_template, redirect, url_for
 
 
@@ -45,22 +46,13 @@ def comment_add():
     form = CommentForm()
     if form.validate_on_submit():
         users = users_from_comment(form.body.data)
-
-        # 如果评论里面有用户，就在comment里添加用户id
         for user in users:
-            comment = Comment(
-                body=form.body.data,
-                topic_id=form.topic_id.data,
-                author_id=current_user.id,
-                commented_user=user.id
-            )
-            db.session.add(comment)
-
+            reply = Reply(body=form.body.data, author_id=current_user.id, receiver_id=user.id, topic_id=form.topic_id.data)
+            db.session.add(reply)
         comment = Comment(
             body=form.body.data,
             topic_id=form.topic_id.data,
             author_id=current_user.id,
-            commented_user=form.topic_user_id.data
         )
         db.session.add(comment)
         db.session.commit()
@@ -75,8 +67,8 @@ def profile():
     topics = created_topic(author_id=current_user.id)
     # commented_topics = Comment.query.filter_by(author_id=current_user.id).order_by(Comment.created_time.desc()).all()
     commented_topics = commented_topic(author_id=current_user.id)
-    # replied_comments = Comment.query.filter_by(commented_user=current_user.id)
-    replied_comments = replied_comment(user_id=current_user.id)
+    # replied_comments = Reply.query.filter_by(receiver_id=current_user.id)
+    replied_comments = replied_comment(receiver_id=current_user.id)
     return render_template('topic/profile.html',
                            topics=topics,
                            commented_topics=commented_topics,

@@ -6,6 +6,7 @@ import json
 from ..models.topic import Topic
 from ..models.comment import Comment
 from ..models.user import User
+from ..models.reply import Reply
 
 cache = redis.StrictRedis()
 
@@ -77,8 +78,8 @@ def users_from_comment(comment):
     return users
 
 
-def replied_comment(user_id):
-    k = 'replied_comment_{}'.format(user_id)
+def replied_comment(receiver_id):
+    k = 'replied_comment_{}'.format(receiver_id)
     cache.expire(k, 10)
     if cache.exists(k):
         v = cache.get(k)
@@ -86,7 +87,7 @@ def replied_comment(user_id):
         return comments
     else:
         v = []
-        comments = Comment.query.filter_by(commented_user=user_id).all()
+        comments = Reply.query.filter_by(receiver_id=receiver_id).all()
         print(comments)
         for c in comments:
             c = c.json()
