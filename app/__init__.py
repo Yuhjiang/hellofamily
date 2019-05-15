@@ -8,7 +8,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_admin import Admin
@@ -25,7 +25,14 @@ login_manager.login_view = 'user.login'
 migrate = Migrate()
 admin = Admin(name='hellofamily', template_mode='bootstrap3')
 
+
 from .models.user import User as Users
+
+
+class UserView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_administrator()
+
 
 admin.add_view(ModelView(Users, db.session, name='users'))
 
