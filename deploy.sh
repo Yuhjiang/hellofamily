@@ -35,6 +35,7 @@ rm -f /etc/nginx/sites-enabled/default
 rm -f /etc/nginx/sites-available/default
 
 cp /var/www/hellofamily/hellofamily.conf /etc/supervisor/conf.d/hellofamily.conf
+cp /var/www/hellofamily/hellofamily_celery.conf /etc/supervisor/conf.d/hellofamily_celery.conf
 # 不要再 sites-available 里面放任何东西
 cp /var/www/hellofamily/hellofamily.nginx /etc/nginx/sites-enabled/hellofamily
 chmod -R o+rwx /var/www/hellofamily

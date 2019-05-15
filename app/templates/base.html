@@ -62,7 +62,7 @@
             <div class="card-body">
                 <div class="user-icon">
                     {% if current_user.is_authenticated %}
-                        <img src="{{ current_user.icon }}">
+                        <img src="{{ current_user.icon }}">{{ current_user.name }}
                     {% else %}
                         <img src="/static/images/helloproject.ico">
                     {% endif %}
@@ -86,6 +86,8 @@
 </div>
 {% block scripts %}
     {{ bootstrap.load_js() }}
+    {{ moment.include_moment() }}
+    {{ moment.locale('zh-cn') }}
 {% endblock scripts %}
 </body>
 </html>

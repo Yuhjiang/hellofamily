@@ -15,6 +15,11 @@
             <div class="card-header">
                 {{ topic.title }}
             </div>
+            <h6 class="card-subtitle mb-1 text-muted">
+                <br>&nbsp;
+                <span>&#10047 作者：{{ topic.author.username }}</span>
+                <span>&#10047 {{ moment(topic.created_time).fromNow(refresh=True) }}</span>
+            </h6>
             <div class="card-body">
                 <div class="markdown-text">
                     {{ topic.body }}
@@ -35,6 +40,7 @@
             <form action="{{ url_for('topic.comment_add') }}" method="post" class="form" role="form">
                 {{ form.csrf_token() }}
                 <input type="hidden" name="topic_id" value="{{ topic.id }}">
+                <input type="hidden" name="topic_user_id" value="{{ topic.author_id }}">
                 <textarea name="body" id="editor"></textarea>
                 <button class="btn btn-primary float-right">评论</button>
             </form>
@@ -44,6 +50,7 @@
 {% endblock %}
 
 {% block scripts %}
+{{ super() }}
 <script src="https://unpkg.zhimg.com/mditor@1.0.5/dist/js/mditor.min.js"></script>
 <script src="https://cdn.bootcss.com/marked/0.3.19/marked.min.js"></script>
 <script src="https://cdn.bootcss.com/prism/1.13.0/prism.js"></script>

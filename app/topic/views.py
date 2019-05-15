@@ -3,7 +3,7 @@ from ..models.user import User
 from ..models.topic import Topic
 from flask_login import login_required, login_user, current_user
 from .. import db
-from . import topic, created_topic, commented_topic
+from . import topic, created_topic, commented_topic, replied_comment, users_from_comment
 from ..models.comment import Comment
 from flask import render_template, redirect, url_for
 
@@ -44,10 +44,23 @@ def detail(id):
 def comment_add():
     form = CommentForm()
     if form.validate_on_submit():
+        users = users_from_comment(form.body.data)
+
+        # 如果评论里面有用户，就在comment里添加用户id
+        for user in users:
+            comment = Comment(
+                body=form.body.data,
+                topic_id=form.topic_id.data,
+                author_id=current_user.id,
+                commented_user=user.id
+            )
+            db.session.add(comment)
+
         comment = Comment(
             body=form.body.data,
             topic_id=form.topic_id.data,
-            author_id=current_user.id
+            author_id=current_user.id,
+            commented_user=form.topic_user_id.data
         )
         db.session.add(comment)
         db.session.commit()
@@ -60,7 +73,11 @@ def comment_add():
 def profile():
     # topics = Topic.query.filter_by(author_id=current_user.id).order_by(Topic.created_time.desc()).all()
     topics = created_topic(author_id=current_user.id)
-    # comments = Comment.query.filter_by(author_id=current_user.id).order_by(Comment.created_time.desc()).all()
+    # commented_topics = Comment.query.filter_by(author_id=current_user.id).order_by(Comment.created_time.desc()).all()
     commented_topics = commented_topic(author_id=current_user.id)
-
-    return render_template('topic/profile.html', topics=topics, commented_topics=commented_topics)
+    # replied_comments = Comment.query.filter_by(commented_user=current_user.id)
+    replied_comments = replied_comment(user_id=current_user.id)
+    return render_template('topic/profile.html',
+                           topics=topics,
+                           commented_topics=commented_topics,
+                           replied_comments=replied_comments)

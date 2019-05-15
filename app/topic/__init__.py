@@ -5,6 +5,7 @@ import redis
 import json
 from ..models.topic import Topic
 from ..models.comment import Comment
+from ..models.user import User
 
 cache = redis.StrictRedis()
 
@@ -63,6 +64,39 @@ def commented_topic(author_id):
         return topics
 
 
+def users_from_comment(comment):
+    parts = comment.split()
+    users = []
+
+    for p in parts:
+        if p.startswith('@'):
+            username = p[1:]
+            u = User.query.filter_by(username=username).first()
+            if u is not None:
+                users.append(u)
+    return users
+
+
+def replied_comment(user_id):
+    k = 'replied_comment_{}'.format(user_id)
+    cache.expire(k, 10)
+    if cache.exists(k):
+        v = cache.get(k)
+        comments = json.loads(v)
+        return comments
+    else:
+        v = []
+        comments = Comment.query.filter_by(commented_user=user_id).all()
+        print(comments)
+        for c in comments:
+            c = c.json()
+            c['created_time'] = c['created_time'].strftime('%Y-%m-%d %H:%M:%S')
+            v.append(c)
+        v = json.dumps(v)
+        cache.set(k, v)
+        return comments
+
+
 topic = Blueprint('topic', __name__)
 
 from . import views
@@ -70,6 +104,4 @@ from . import views
 
 @topic.app_context_processor
 def inject_permissions():
-    return dict(Permission=Permission, current_user=current_user)
-
-
+    return dict(Permission=Permission)

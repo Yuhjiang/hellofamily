@@ -65,6 +65,7 @@ def profile():
     icon_form = UpdateIcon()
     info_form.location.data = current_user.location
     info_form.about_me.data = current_user.about_me
+    infor_form.name.data = current_user.name
 
     return render_template('user/setting.html', info_form=info_form, icon_form=icon_form)
 
@@ -76,6 +77,7 @@ def information():
     if form.validate_on_submit():
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
+        current_user.name = form.name.data
         db.session.add(current_user._get_current_object())
         db.session.commit()
 

@@ -5,6 +5,7 @@ from app.models.user import User
 from app.models.role import Role
 from app.models.topic import Topic
 from app.models.comment import Comment
+from app.models.reply import Reply
 from app.models.permission import Permission
 
 
@@ -15,7 +16,7 @@ migrate = Migrate(app, db)
 @app.shell_context_processor
 def make_shell_context():
 
-    return dict(db=db, User=User, Role=Role, Permission=Permission, Topic=Topic, Comment=Comment)
+    return dict(db=db, User=User, Role=Role, Permission=Permission, Topic=Topic, Comment=Comment, Reply=Reply)
 
 
 # @app.cli.command()

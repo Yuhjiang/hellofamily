@@ -11,5 +11,6 @@ class TopicForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     topic_id = IntegerField()
+    topic_user_id = IntegerField()
     body = TextAreaField('输入评论', validators=[DataRequired()])
     submit = SubmitField('评论')

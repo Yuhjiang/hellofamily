@@ -30,6 +30,19 @@
                 {% endfor %}
             </div>
         </div>
+        <br>
+        <div class="card">
+                <div class="card-header">收到回复</div>
+                <div class="list-group list-group-flush">
+                    {% for comment in replied_comments %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('topic.detail', id=comment.topic_id) }}">
+                                {{ comment.body }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
     </div>
 </div>
 {% endblock %}

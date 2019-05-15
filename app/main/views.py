@@ -7,4 +7,4 @@ from ..models.role import Role
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    return redirect('/topic')

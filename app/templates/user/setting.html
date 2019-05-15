@@ -12,6 +12,7 @@
             <div class="card-body">
                 <form action="/user/information" method="post" class="form" role="form">
                     {{ icon_form.csrf_token() }}
+                    {{ render_form_row([info_form.name]) }}
                     {{ render_form_row([info_form.location]) }}
                     {{ render_form_row([info_form.about_me]) }}
                     {{ render_form_row([info_form.submit]) }}
