@@ -11,6 +11,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_moment import Moment
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from config import config
 
 
@@ -21,7 +23,11 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = 'user.login'
 migrate = Migrate()
-moment = Moment()
+admin = Admin(name='hellofamily', template_mode='bootstrap3')
+
+from .models.user import User as Users
+
+admin.add_view(ModelView(Users, db.session, name='users'))
 
 
 def create_app(config_name):
@@ -37,6 +43,7 @@ def create_app(config_name):
     login_manager.init_app(app)
     migrate.init_app(app)
     moment.init_app(app)
+    admin.init_app(app)
 
     # 注册蓝图
     from .main import main as main_blueprint

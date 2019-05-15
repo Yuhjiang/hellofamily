@@ -20,7 +20,6 @@ def created_topic(author_id):
     # 创建用户对应的键值
     k = 'created_topic_{}'.format(author_id)
     # 设定缓存时间10s
-    cache.expire(k, 10)
     if cache.exists(k):
         v = cache.get(k)
         topics = json.loads(v)
@@ -34,6 +33,7 @@ def created_topic(author_id):
             v.append(t)
         v = json.dumps(v)
         cache.set(k, v)
+        cache.expire(k, 10)
         return topics
 
 
@@ -45,8 +45,6 @@ def commented_topic(author_id):
     """
     # 创建用户对应的键值
     k = 'commented_topic_{}'.format(author_id)
-    # 设定缓存时间10s
-    cache.expire(k, 10)
     if cache.exists(k):
         v = cache.get(k)
         topics = json.loads(v)
@@ -61,7 +59,8 @@ def commented_topic(author_id):
             topics.append(t)
         v = json.dumps([t for t in topics])
         cache.set(k, v)
-
+        # 设定缓存时间10s
+        cache.expire(k, 10)
         return topics
 
 
@@ -80,7 +79,6 @@ def users_from_comment(comment):
 
 def replied_comment(receiver_id):
     k = 'replied_comment_{}'.format(receiver_id)
-    cache.expire(k, 10)
     if cache.exists(k):
         v = cache.get(k)
         comments = json.loads(v)
@@ -88,13 +86,13 @@ def replied_comment(receiver_id):
     else:
         v = []
         comments = Reply.query.filter_by(receiver_id=receiver_id).all()
-        print(comments)
         for c in comments:
             c = c.json()
             c['created_time'] = c['created_time'].strftime('%Y-%m-%d %H:%M:%S')
             v.append(c)
         v = json.dumps(v)
         cache.set(k, v)
+        cache.expire(k, 10)
         return comments
 
 
