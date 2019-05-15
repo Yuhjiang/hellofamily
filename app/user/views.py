@@ -1,5 +1,5 @@
 from flask import render_template, session, redirect, url_for, current_app, flash, request
-from . import user
+from . import people
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models.user import User
 from .. import db
@@ -22,7 +22,7 @@ from ..mail import send_email
 #             return redirect(url_for('user.unconfirmed'))
 
 
-@user.route('/login', methods=['GET', 'POST'])
+@people.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -37,7 +37,7 @@ def login():
     return render_template('user/login.html', form=form)
 
 
-@user.route('/register', methods=['GET', 'POST'])
+@people.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -51,14 +51,14 @@ def register():
     return render_template('user/login.html', form=form)
 
 
-@user.route('/logout')
+@people.route('/logout')
 def logout():
     logout_user()
     flash('你已退出当前账号')
     return redirect(url_for('main.index'))
 
 
-@user.route('/setting')
+@people.route('/setting')
 @login_required
 def profile():
     info_form = EditProfileAdminForm()
@@ -70,7 +70,7 @@ def profile():
     return render_template('user/setting.html', info_form=info_form, icon_form=icon_form)
 
 
-@user.route('/information', methods=['POST'])
+@people.route('/information', methods=['POST'])
 @login_required
 def information():
     form = EditProfileAdminForm()
@@ -84,7 +84,7 @@ def information():
     return redirect('setting')
 
 
-@user.route('/icon', methods=['POST'])
+@people.route('/icon', methods=['POST'])
 @login_required
 def icon():
     form = UpdateIcon()
@@ -100,7 +100,7 @@ def icon():
     return redirect('setting')
 
 
-@user.route('/confirm/<token>')
+@people.route('/confirm/<token>')
 @login_required
 def confirm(token):
     if current_user.confirmed:
@@ -113,14 +113,14 @@ def confirm(token):
     return redirect(url_for('topic.index'))
 
 
-@user.route('/unconfirmed')
+@people.route('/unconfirmed')
 def unconfirmed():
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('topic.index'))
     return render_template('user/unconfirmed.html')
 
 
-@user.route('/resend_confirmation')
+@people.route('/resend_confirmation')
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
@@ -130,7 +130,7 @@ def resend_confirmation():
     return redirect(url_for('topic.index'))
 
 
-@user.route('/change_password', methods=['GET', 'POST'])
+@people.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
     """
@@ -151,7 +151,7 @@ def change_password():
     return render_template('user/change_password.html', form=form)
 
 
-@user.route('/reset', methods=['GET', 'POST'])
+@people.route('/reset', methods=['GET', 'POST'])
 def password_reset_request():
     """
     原始密码忘记，通过邮箱找回密码
@@ -164,12 +164,12 @@ def password_reset_request():
             send_email(user.email, 'Rest Your Password', 'user/email/reset_password',
                        user=user, token=token)
         flash('一封重置密码的邮件已发送，请到邮箱查收')
-        return redirect(url_for('user.login'))
+        return redirect(url_for('people.login'))
 
     return render_template('user/reset_password.html', form=form)
 
 
-@user.route('/reset/<token>', methods=['GET', 'POST'])
+@people.route('/reset/<token>', methods=['GET', 'POST'])
 def password_reset(token):
     """
     原始密码忘记，重新设置新密码
@@ -179,14 +179,14 @@ def password_reset(token):
         if User.reset_password(token, form.password.data):
             db.session.commit()
             flash('你的密码已经被重置')
-            return redirect(url_for('user.login'))
+            return redirect(url_for('people.login'))
         else:
             return redirect('topic.index')
 
     return render_template('user/reset_password.html', form=form)
 
 
-@user.route('/change_email', methods=['GET', 'POST'])
+@people.route('/change_email', methods=['GET', 'POST'])
 @login_required
 def change_email_request():
     form = ChangeEmailForm()
@@ -205,7 +205,7 @@ def change_email_request():
     return render_template('user/change_email.html', form=form)
 
 
-@user.route('/change_email/<token>')
+@people.route('/change_email/<token>')
 def change_email(token):
     if current_user.change_email(token):
         db.session.commit()

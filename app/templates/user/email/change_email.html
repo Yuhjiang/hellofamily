@@ -1,7 +1,7 @@
 <p>Dear {{ user.username }},</p>
-<p>To confirm your new email address <a href="{{ 'http://hellofamily.club' + url_for('user.change_email', token=token)}}">click here</a>.</p>
+<p>To confirm your new email address <a href="{{ 'http://hellofamily.club' + url_for('people.change_email', token=token)}}">click here</a>.</p>
 <p>Alternatively, you can paste the following link in your browser's address bar:</p>
-<p>{{ 'http://hellofamily.club' + url_for('user.change_email', token=token) }}</p>
+<p>{{ 'http://hellofamily.club' + url_for('people.change_email', token=token) }}</p>
 <p>Sincerely,</p>
 <p>The HelloFamily Team</p>
 <p><small>Note: replies to this email address are not monitored.</small></p>
