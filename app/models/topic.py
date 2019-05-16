@@ -13,6 +13,7 @@ class Topic(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     comments = db.relationship('Comment', backref='topic', lazy='dynamic')
     replies = db.relationship('Reply', backref='topic', lazy='dynamic')
+    board_id = db.Column(db.Integer, db.ForeignKey('boards.id'))
 
     def json(self):
         d = dict()

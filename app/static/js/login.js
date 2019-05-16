@@ -29,6 +29,8 @@ function register() {
             password.insertAdjacentHTML('afterend', passwordTemplate)
             password.insertAdjacentHTML('beforebegin', emailTemplate)
         }
+        var button = document.querySelector('.button')
+        button.innerHTML = registerTemplate
     } else {
         // form.submit()
     }
@@ -50,6 +52,8 @@ function login() {
         var email = form.querySelector('#email')
         password.remove()
         email.remove()
+        var button = document.querySelector('.button')
+        button.innerHTML = loginTemplate
     }
 }
 
@@ -59,4 +63,14 @@ var passwordTemplate = `
 
 var emailTemplate = `
     <input class="form-control" id="email" name="email" required="" type="text" placeholder="email">
+`
+
+var registerTemplate = `
+    <a class="btn btn-primary" onclick="login()">LOG IN</a>
+    <button class="btn btn-primary" onclick="register()" style="margin-right: 20px;font-size: 20px">Register</button>
+`
+
+var loginTemplate = `
+    <button class="btn btn-primary" onclick="login()" style="margin-right: 20px;font-size: 20px">LOG IN</button>
+    <a class="btn btn-primary" onclick="register()">SIGN IN</a>
 `

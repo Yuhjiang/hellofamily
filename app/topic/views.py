@@ -23,7 +23,8 @@ def add():
     if form.validate_on_submit():
         t = Topic(title=form.title.data,
                   body='\n'+form.body.data,
-                  author_id=current_user.id
+                  author_id=current_user.id,
+                  board_id=form.board.data
                   )
         db.session.add(t)
         db.session.commit()

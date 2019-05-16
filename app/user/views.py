@@ -21,8 +21,14 @@ from ..mail import send_email
 #                 and request.endpoint != 'static':
 #             return redirect(url_for('user.unconfirmed'))
 
+@people.route('/', methods=['GET', 'POST'])
+def login_or_register():
+    form = LoginForm()
 
-@people.route('/login', methods=['GET', 'POST'])
+    return render_template('user/login.html', form=form)
+
+
+@people.route('/login', methods=['POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -34,10 +40,11 @@ def login():
                 next = url_for('topic.index')
             flash('登录成功，欢迎{}大人'.format(user.username))
             return redirect(next)
-    return render_template('user/login.html', form=form)
+    flash('账号或密码错误，请重新登录')
+    return redirect('./')
 
 
-@people.route('/register', methods=['GET', 'POST'])
+@people.route('/register', methods=['POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -48,7 +55,9 @@ def register():
         db.session.commit()
         token = user.generate_confirmation_token()
         send_email(user.email, '确认并激活你的账户', 'user/email/confirm', user=user, token=token)
-    return render_template('user/login.html', form=form)
+        return redirect('topic.index')
+    flash('用户名或邮箱已被注册')
+    return redirect('./')
 
 
 @people.route('/logout')
@@ -68,36 +77,6 @@ def profile():
     info_form.name.data = current_user.name
 
     return render_template('user/setting.html', info_form=info_form, icon_form=icon_form)
-
-
-@people.route('/information', methods=['POST'])
-@login_required
-def information():
-    form = EditProfileAdminForm()
-    if form.validate_on_submit():
-        current_user.location = form.location.data
-        current_user.about_me = form.about_me.data
-        current_user.name = form.name.data
-        db.session.add(current_user._get_current_object())
-        db.session.commit()
-
-    return redirect('setting')
-
-
-@people.route('/icon', methods=['POST'])
-@login_required
-def icon():
-    form = UpdateIcon()
-    if form.validate_on_submit():
-        filename = secure_filename(form.icon.data.filename)
-        filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)),
-                                'static/images/' + filename)
-        current_user.icon = '/static/images/' + filename
-        form.icon.data.save(filepath)
-        db.session.add(current_user._get_current_object())
-        db.session.commit()
-
-    return redirect('setting')
 
 
 @people.route('/confirm/<token>')

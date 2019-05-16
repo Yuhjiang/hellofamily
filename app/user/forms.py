@@ -21,6 +21,14 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
     email = StringField('Email', validators=[Email(), DataRequired(), Length(1, 64)])
 
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('该邮箱已被注册')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('该用户名已被注册')
+
 
 class EditProfileAdminForm(FlaskForm):
     name = StringField('昵称')

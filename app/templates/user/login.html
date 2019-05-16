@@ -3,8 +3,8 @@
 {% block title %}Hello Family Login{% endblock %}
 
 {% block styles %}
-{{ super() }}
 <link type="text/css" rel="stylesheet" href="../../static/css/login.css">
+{{ super() }}
 {% endblock %}
 
 {% block scripts %}
@@ -26,17 +26,19 @@
         <div id="login_wrap">
             <div id="login"><!-- 登录注册切换动画 -->
                 <div id="status">
-                    <i style="top: -5px">登录</i>
-                    <i style="top: 35px">注册</i>
+                    <i style="top: -5px">登 录</i>
+                    <i style="top: 35px">注 册</i>
                 </div>
                 <span>
-                    <form action method="post" class="form" role="form">
+                    <form action="/user/login" method="post" class="form" role="form">
                         {{ form.csrf_token }}
                         <br>
                         <input class="form-control" id="username" name="username" required="" type="text" value="" placeholder="username">
                         <input class="form-control" id="password" name="password" required="" type="password" value="" placeholder="password">
-                        <button class="btn btn-primary" onclick="login()" style="margin-right: 20px;">LOG IN</button>
-                        <button class="btn btn-primary" onclick="register()">SIGN IN</button>
+                        <div class="button">
+                            <button class="btn btn-primary" onclick="login()" style="margin-right: 20px;font-size: 20px">LOG IN</button>
+                            <a class="btn btn-primary" onclick="register()">SIGN IN</a>
+                        </div>
                     </form>
                     <br>
                     <a href="/user/reset"><p>忘记密码?</p></a>

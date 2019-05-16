@@ -14,7 +14,7 @@
         <div class="container">
         <form action="/topic/add" method="post" class="form" role="form">
         {{ form.csrf_token }}
-        {{ render_form_row([form.title]) }}
+        {{ render_form_row([form.title, form.board]) }}
         <textarea name="body" id="editor"></textarea>
         {{ render_form_row([form.submit]) }}
         </form>
@@ -27,6 +27,6 @@
     {{ super() }}
     <script src="https://unpkg.zhimg.com/mditor@1.0.5/dist/js/mditor.min.js"></script>
     <script>
-        var mditor = Mditor.fromTextarea(document.getElementById('editor'));
+        var mditor = Mditor.fromTextarea(document.getElementById('editor'))
     </script>
 {% endblock %}
