@@ -11,9 +11,8 @@ class Board(db.Model):
 
     @staticmethod
     def insert_board():
-        boards = ['一般话题', 'HELLO! PROJECT', 'モーニング娘。',
-                  'アンジュルム', 'Juice=Juice', 'カントリー・ガールズ',
-                  'こぶしファクトリー', 'つばきファクトリ', 'BEYOOOOONDS']
+        boards = ['一般话题', '资讯', '博客',
+                  '杂谈', '广告']
         for b in boards:
             board = Board.query.filter_by(name=b).first()
             if board is None:

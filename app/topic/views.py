@@ -6,12 +6,19 @@ from .. import db
 from . import topic, created_topic, commented_topic, replied_comment, users_from_comment
 from ..models.comment import Comment
 from ..models.reply import Reply
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 
 
 @topic.route('/')
 def index():
     topics = Topic.query.order_by(Topic.created_time.desc()).all()
+
+    return render_template('topic/index.html', topics=topics)
+
+
+@topic.route('/<int:board_id>')
+def board_index(board_id):
+    topics = Topic.query.filter_by(board_id=board_id).order_by(Topic.created_time.desc()).all()
 
     return render_template('topic/index.html', topics=topics)
 
@@ -74,3 +81,42 @@ def profile():
                            topics=topics,
                            commented_topics=commented_topics,
                            replied_comments=replied_comments)
+
+
+@topic.route('/delete/<int:id>')
+@login_required
+def delete(id):
+    """
+    删除topic
+    :param id:
+    :return:
+    """
+    t = Topic.query.get(id)
+    comments = Comment.query.filter_by(topic_id=id).all()
+    for c in comments:
+        db.session.delete(c)
+    db.session.delete(t)
+    db.session.commit()
+
+    return redirect(url_for('.index'))
+
+
+@topic.route('edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    """
+    修改topic
+    :param id:
+    :return:
+    """
+    t = Topic.query.get(id)
+    form = TopicForm()
+    if form.validate_on_submit():
+        t: Topic = Topic.query.get(id)
+        t.title = form.title.data
+        t.body = '\n' + form.body.data
+        db.session.add(t)
+        db.session.commit()
+        return redirect(url_for('.detail', id=id))
+    form.title.data = t.title
+    return render_template('topic/edit.html', form=form, topic=t)

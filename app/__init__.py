@@ -21,7 +21,7 @@ mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.login_view = 'people.login'
+login_manager.login_view = 'people.login_or_register'
 migrate = Migrate()
 admin = Admin(name='hellofamily', template_mode='bootstrap3')
 

@@ -8,15 +8,18 @@
         <div class="card">
             <div class="card-header">
                 <div class="btn-group btn-group-sm" role="group">
-                    <button type="button" class="btn btn-primary btn-sm">全部帖子</button>
-                    <button type="button" class="btn btn-primary btn-sm">HELLO! PROJECT</button>
-                    <button type="button" class="btn btn-primary btn-sm">モーニング娘。</button>
-                    <button type="button" class="btn btn-primary btn-sm">アンジュルム</button>
-                    <button type="button" class="btn btn-primary btn-sm">Juice=Juice</button>
-                    <button type="button" class="btn btn-primary btn-sm">カントリー・ガールズ</button>
-                    <button type="button" class="btn btn-primary btn-sm">こぶしファクトリー</button>
-                    <button type="button" class="btn btn-primary btn-sm">つばきファクトリ</button>
-                    <button type="button" class="btn btn-primary btn-sm">BEYOOOOONDS</button>
+                    <a href="{{ url_for('topic.index') }}">
+                        <button type="button" class="btn btn-primary btn-sm">全部帖子</button>
+                    </a>&nbsp;
+                    <a href="{{ url_for('topic.board_index', board_id=1) }}">
+                        <button type="button" class="btn btn-primary btn-sm">资讯</button>
+                    </a>&nbsp;
+                    <a href="{{ url_for('topic.board_index', board_id=2) }}">
+                        <button type="button" class="btn btn-primary btn-sm">博客</button>
+                    </a>&nbsp;
+                    <a href="{{ url_for('topic.board_index', board_id=3) }}">
+                        <button type="button" class="btn btn-primary btn-sm">杂谈</button>
+                    </a>&nbsp;
                 </div>
             </div>
             <br>
@@ -24,7 +27,17 @@
             <div class="card">
                 <ul class="list-group list-group-flush">
                 {% for topic in topics %}
-                    <li class="list-group-item"><a href="{{ url_for('topic.detail', id=topic.id) }}">{{ topic.title }}</a></li>
+                    <li class="list-group-item">
+                        <a href="{{ url_for('topic.detail', id=topic.id) }}">{{ topic.title }}</a>
+                        <div class="btn-group btn-group-sm float-right" role="group">
+                            <a href="{{ url_for('topic.edit', id=topic.id) }}">
+                                <button type="button" class="btn btn-success btn-sm float-right">编辑</button>
+                            </a>
+                            <a href="{{ url_for('topic.delete', id=topic.id) }}">
+                                <button type="button" class="btn btn-danger btn-sm float-right">删除</button>
+                            </a>
+                        </div>
+                    </li>
                 {% endfor %}
                 </ul>
             </div>

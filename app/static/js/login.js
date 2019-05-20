@@ -1,5 +1,6 @@
 var onoff = true//根据此布尔值判断当前为注册状态还是登录状态
-
+var form = document.querySelector('.form')
+form.action = '/user/login' + window.location.search
 //自动居中title
 var name_c = document.getElementById("title")
 for (var i = 0; i < name.length; i++)
@@ -47,7 +48,7 @@ function login() {
         status[1].style.top = 35 + "px"
         status[0].style.top = -5 + "px"
         onoff = !onoff
-        form.action = ''
+        form.action = '/user/login' + window.location.search
         var password = form.querySelector('#password2')
         var email = form.querySelector('#email')
         password.remove()

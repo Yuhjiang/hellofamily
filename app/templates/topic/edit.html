@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form_row %}
 
-{% block title %}Hello Family 编写帖子 {% endblock %}
+{% block title %}Hello Family 编辑帖子 {% endblock %}
 
 {% block styles %}
     {{ super() }}
@@ -12,10 +12,10 @@
 <div class="markdown-area">
     <div class="row">
         <div class="container">
-        <form action="/topic/add" method="post" class="form" role="form">
+        <form action="" method="post" class="form" role="form">
         {{ form.csrf_token }}
         {{ render_form_row([form.title, form.board]) }}
-        <textarea name="body" id="editor"></textarea>
+        <textarea name="body" id="editor">{{ topic.body }}</textarea>
         {{ render_form_row([form.submit]) }}
         </form>
         </div>

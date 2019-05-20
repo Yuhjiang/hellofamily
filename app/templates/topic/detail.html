@@ -19,6 +19,8 @@
                 <br>&nbsp;
                 <span>&#10047 作者：{{ topic.author.username }}</span>
                 <span>&#10047 {{ moment(topic.created_time).fromNow(refresh=True) }}</span>
+                <span><a href="{{ url_for('topic.edit', id=topic.id) }}" style="color: #6c757d">&#10047 编辑</a></span>
+                <span><a href="{{ url_for('topic.delete', id=topic.id) }}" style="color: #6c757d">&#10047 删除</a></span>
             </h6>
             <div class="card-body">
                 <div class="markdown-text">

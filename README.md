@@ -1,4 +1,5 @@
 # hellofamily
+- 管理员账号 用户名:summer 密码:123456
 ## Web架构（MVC架构）
 ### 后端
 - 采用Flask框架，配置flask_login用户登录状态，flask-wtform管理表单。

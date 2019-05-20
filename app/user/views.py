@@ -35,9 +35,11 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, True)
-            next:str = request.args.get('next')
+            print(request.args.get('next'))
+            next: str = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('topic.index')
+            print(next)
             flash('登录成功，欢迎{}大人'.format(user.username))
             return redirect(next)
     flash('账号或密码错误，请重新登录')
@@ -143,7 +145,7 @@ def password_reset_request():
             send_email(user.email, 'Rest Your Password', 'user/email/reset_password',
                        user=user, token=token)
         flash('一封重置密码的邮件已发送，请到邮箱查收')
-        return redirect(url_for('people.login'))
+        return redirect(url_for('people.index'))
 
     return render_template('user/reset_password.html', form=form)
 
