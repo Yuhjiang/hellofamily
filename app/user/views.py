@@ -10,16 +10,16 @@ import os
 from ..mail import send_email
 
 
-# @user.before_app_request
-# def before_request():
-#     if current_user.is_authenticated:
-#         current_user.ping()
-#         # 未激活 and
-#         if not current_user.confirmed \
-#                 and request.endpoint \
-#                 and request.blueprint != 'user' \
-#                 and request.endpoint != 'static':
-#             return redirect(url_for('user.unconfirmed'))
+@people.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        # 未激活 and
+        if not current_user.confirmed \
+                and request.blueprint != 'people' \
+                and request.endpoint != 'static' and request.path != url_for('topic.index') and request.path != '/':
+            return redirect(url_for('people.unconfirmed'))
+
 
 @people.route('/', methods=['GET', 'POST'])
 def login_or_register():
