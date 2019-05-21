@@ -33,14 +33,13 @@
                     <form action={{ "/user/login"}} method="post" class="form" role="form">
                         {{ form.csrf_token }}
                         <br>
-                        <input class="form-control" id="username" name="username" required="" type="text" value="" placeholder="username">
-                        <input class="form-control" id="password" name="password" required="" type="password" value="" placeholder="password">
+                        <input class="form-control" id="username" name="username" required="" type="text" value="" placeholder="测试账号:summer">
+                        <input class="form-control" id="password" name="password" required="" type="password" value="" placeholder="密码:123456">
                         <div class="button">
                             <button class="btn btn-primary" onclick="login()" style="margin-right: 20px;font-size: 20px">LOG IN</button>
                             <a class="btn btn-primary" onclick="register()">SIGN IN</a>
                         </div>
                     </form>
-                    <br>
                     <a href="/user/reset"><p>忘记密码?</p></a>
                 </span>
             </div>

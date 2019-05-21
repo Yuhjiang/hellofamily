@@ -55,16 +55,17 @@ def detail(id):
 def comment_add():
     form = CommentForm()
     if form.validate_on_submit():
-        users = users_from_comment(form.body.data)
-        for user in users:
-            reply = Reply(body=form.body.data, author_id=current_user.id, receiver_id=user.id, topic_id=form.topic_id.data)
-            db.session.add(reply)
         comment = Comment(
             body=form.body.data,
             topic_id=form.topic_id.data,
             author_id=current_user.id,
         )
         db.session.add(comment)
+
+        users = users_from_comment(form.body.data)
+        for user in users:
+            reply = Reply(body=form.body.data, author_id=current_user.id, receiver_id=user.id, topic_id=form.topic_id.data, comment_id=comment.id)
+            db.session.add(reply)
         db.session.commit()
 
     return redirect(url_for('topic.detail', id=form.topic_id.data))
@@ -136,7 +137,7 @@ def comment_delete(id):
     :return:
     """
     c = Comment.query.get(id)
-    replies = Reply.query.filter_by(author_id=id).all()
+    replies = Reply.query.filter_by(comment_id=id).all()
     for r in replies:
         db.session.delete(r)
     db.session.delete(c)
