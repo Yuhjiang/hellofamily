@@ -6,7 +6,9 @@ from .. import db
 from . import topic, created_topic, commented_topic, replied_comment, users_from_comment
 from ..models.comment import Comment
 from ..models.reply import Reply
-from flask import render_template, redirect, url_for, request
+from ..models.permission import Permission
+from flask import render_template, redirect, url_for, request, flash
+from ..decorators import permission_required, admin_required, comment_delete, topic_delete, same_user_required
 
 
 @topic.route('/')
@@ -85,6 +87,7 @@ def profile():
 
 @topic.route('/delete/<int:id>')
 @login_required
+@topic_delete(Permission.MODERATE)
 def delete(id):
     """
     删除topic
@@ -103,6 +106,7 @@ def delete(id):
 
 @topic.route('edit/<int:id>', methods=['GET', 'POST'])
 @login_required
+@same_user_required
 def edit(id):
     """
     修改topic
@@ -120,3 +124,22 @@ def edit(id):
         return redirect(url_for('.detail', id=id))
     form.title.data = t.title
     return render_template('topic/edit.html', form=form, topic=t)
+
+
+@topic.route('comment/delete/<int:id>')
+@login_required
+@comment_delete(Permission.MODERATE)
+def comment_delete(id):
+    """
+    删除评论
+    :param id:
+    :return:
+    """
+    c = Comment.query.get(id)
+    replies = Reply.query.filter_by(author_id=id).all()
+    for r in replies:
+        db.session.delete(r)
+    db.session.delete(c)
+    db.session.commit()
+
+    return redirect(url_for('topic.detail', id=c.topic_id))

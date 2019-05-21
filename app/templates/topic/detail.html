@@ -32,7 +32,10 @@
             <ul class="list-group list-group-flush">
                 {% for comment in comments %}
                     <li class="list-group-item">
-                        <div class="user-info">{{ comment.comment_author.username }}</div>
+                        <div>
+                            <span class="user-info">{{ comment.comment_author.username }}</span>
+                            <span><a href="{{ url_for('topic.comment_delete', id=comment.id) }}" class="float-right" style="color: #6c757d">删除</a></span>
+                        </div>
                         <div class="markdown-text">{{ comment.body }}</div>
                     </li>
                 {% endfor %}
