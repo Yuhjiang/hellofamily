@@ -7,6 +7,7 @@ from ..models.topic import Topic
 from ..models.comment import Comment
 from ..models.user import User
 from ..models.reply import Reply
+from ..models.board import Board
 
 cache = redis.StrictRedis()
 
@@ -104,3 +105,8 @@ from . import views
 @topic.app_context_processor
 def inject_permissions():
     return dict(Permission=Permission)
+
+
+@topic.app_context_processor
+def inject_boards():
+    return dict(boards=Board.query.all())
