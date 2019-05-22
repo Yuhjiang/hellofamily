@@ -96,9 +96,6 @@ def delete(id):
     :return:
     """
     t = Topic.query.get(id)
-    comments = Comment.query.filter_by(topic_id=id).all()
-    for c in comments:
-        db.session.delete(c)
     db.session.delete(t)
     db.session.commit()
 
@@ -137,9 +134,9 @@ def comment_delete(id):
     :return:
     """
     c = Comment.query.get(id)
-    replies = Reply.query.filter_by(comment_id=id).all()
-    for r in replies:
-        db.session.delete(r)
+    # replies = Reply.query.filter_by(comment_id=id).all()
+    # for r in replies:
+    #     db.session.delete(r)
     db.session.delete(c)
     db.session.commit()
 

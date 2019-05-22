@@ -11,7 +11,7 @@ class Topic(db.Model):
     title = db.Column(db.String(64))
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comment', backref='topic', lazy='dynamic')
+    comments = db.relationship('Comment', backref='topic', lazy='dynamic', cascade='all, delete-orphan')
     replies = db.relationship('Reply', backref='topic', lazy='dynamic')
     board_id = db.Column(db.Integer, db.ForeignKey('boards.id'))
 
