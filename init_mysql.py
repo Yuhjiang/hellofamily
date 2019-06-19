@@ -5,7 +5,7 @@ import secret
 def reset_database(database_name):
     url = 'mysql+pymysql://root:{}@localhost/?charset=utf8mb4'.format(secret.database_password)
 
-    e = create_engine(url, echo=True)
+    e = create_engine(url, echo=True, pool_size=20, pool_timeout=30)
 
     with e.connect() as c:
         c.execute('DROP DATABASE IF EXISTS {}'.format(database_name))

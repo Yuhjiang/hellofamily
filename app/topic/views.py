@@ -7,15 +7,27 @@ from . import topic, created_topic, commented_topic, replied_comment, users_from
 from ..models.comment import Comment
 from ..models.reply import Reply
 from ..models.permission import Permission
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request, flash, current_app
 from ..decorators import permission_required, admin_required, comment_delete, topic_delete, same_user_required
 
 
 @topic.route('/')
 def index():
-    topics = Topic.query.order_by(Topic.created_time.desc()).all()
+    """
+    显示所有用户话题
+    :return:
+    """
+    page = request.args.get('page', 1, type=int)
+    pagination = Topic.query.order_by(Topic.created_time.desc()).paginate(
+        page, per_page=current_app.config['FLASK_TOPICS_PER_PAGE'], error_out=False,
+    )
 
-    return render_template('topic/index.html', topics=topics)
+    # 分页显示所有话题
+    topics = pagination.items
+    # Expired Version: 一次性显示所有话题
+    # topics = Topic.query.order_by(Topic.created_time.desc()).all()
+
+    return render_template('topic/index.html', topics=topics, pagination=pagination)
 
 
 @topic.route('/<int:board_id>')
@@ -117,6 +129,7 @@ def edit(id):
         t: Topic = Topic.query.get(id)
         t.title = form.title.data
         t.body = '\n' + form.body.data
+        t.board_id = form.board.data
         db.session.add(t)
         db.session.commit()
         return redirect(url_for('.detail', id=id))

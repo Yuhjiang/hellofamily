@@ -15,10 +15,13 @@ class Config(object):
     MAIL_PASSWORD = secret.mail_password
     FLASK_MAIL_SUBJECT_PREFIX = '[HelloFamily]'
     FLASK_MAIL_SENDER = secret.mail_username
-    FLASK_ADMIN = secret.mail_username
+    FLASK_ADMIN = secret.mail_username              # 管理员账户邮箱
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_POOL_SIZE = 20                       # mysql连接池数量
+    SQLALCHEMY_POOL_TIMEOUT = 30                    # 数据库任务的过期时间
     CELERY_BROKER_URL = 'redis://localhost'
     CELERY_RESULT_BACKEND = 'redis://localhost'
+    FLASK_TOPICS_PER_PAGE = 10                       # 每页显示的文章数量
 
     @staticmethod
     def init_app(app):
