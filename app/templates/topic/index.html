@@ -40,7 +40,11 @@
             </div>
         </div>
     </div>
-        {{ macros.pagination_widget(pagination, '.index') }}
+        {% if board_id %}
+            {{ macros.pagination_widget(pagination, endpoint, board_id=board_id) }}
+        {% else %}
+            {{ macros.pagination_widget(pagination, endpoint) }}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

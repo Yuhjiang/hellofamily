@@ -3,7 +3,9 @@ from ..models.user import User
 from ..models.topic import Topic
 from flask_login import login_required, login_user, current_user
 from .. import db
-from . import topic, created_topic, commented_topic, replied_comment, users_from_comment
+from . import topic, created_topic, \
+    commented_topic, replied_comment, users_from_comment, \
+    update_commented_topics, update_topics, update_replied_comment
 from ..models.comment import Comment
 from ..models.reply import Reply
 from ..models.permission import Permission
@@ -27,14 +29,18 @@ def index():
     # Expired Version: 一次性显示所有话题
     # topics = Topic.query.order_by(Topic.created_time.desc()).all()
 
-    return render_template('topic/index.html', topics=topics, pagination=pagination)
+    return render_template('topic/index.html', topics=topics, pagination=pagination, endpoint='.index')
 
 
 @topic.route('/<int:board_id>')
 def board_index(board_id):
-    topics = Topic.query.filter_by(board_id=board_id).order_by(Topic.created_time.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = Topic.query.filter_by(board_id=board_id).order_by(Topic.created_time.desc()).paginate(
+        page, per_page=current_app.config['FLASK_TOPICS_PER_PAGE'], error_out=False)
+    topics = pagination.items
+    # topics = Topic.query.filter_by(board_id=board_id).order_by(Topic.created_time.desc()).all()
 
-    return render_template('topic/index.html', topics=topics)
+    return render_template('topic/index.html', topics=topics, pagination=pagination, endpoint='.board_index', board_id=board_id)
 
 
 @topic.route('/add', methods=['GET', 'POST'])
@@ -49,6 +55,8 @@ def add():
                   )
         db.session.add(t)
         db.session.commit()
+        # 更新缓存里的话题数据
+        update_topics(current_user.id)
         return redirect('/topic')
     return render_template('topic/add.html', form=form)
 
@@ -73,12 +81,18 @@ def comment_add():
             author_id=current_user.id,
         )
         db.session.add(comment)
+        # 更新缓存里最近评论数据
+        update_commented_topics(current_user.id)
 
         users = users_from_comment(form.body.data)
         for user in users:
             reply = Reply(body=form.body.data, author_id=current_user.id, receiver_id=user.id, topic_id=form.topic_id.data, comment_id=comment.id)
             db.session.add(reply)
         db.session.commit()
+        # 更新缓存内收到的评论
+        for user in users:
+            print(user.username)
+            update_replied_comment(user.id)
 
     return redirect(url_for('topic.detail', id=form.topic_id.data))
 
@@ -107,9 +121,18 @@ def delete(id):
     :param id:
     :return:
     """
-    t = Topic.query.get(id)
+    t: Topic = Topic.query.get(id)
+    comments = t.comments.all()
+
     db.session.delete(t)
     db.session.commit()
+
+    # 更新缓存内最近话题数据
+    update_topics(t.author_id)
+    print('更新数据')
+    # 更新缓存内最近评论数据
+    for comment in comments:
+        update_commented_topics(comment.author_id)
 
     return redirect(url_for('.index'))
 
@@ -146,11 +169,14 @@ def comment_delete(id):
     :param id:
     :return:
     """
-    c = Comment.query.get(id)
+    c: Comment = Comment.query.get(id)
     # replies = Reply.query.filter_by(comment_id=id).all()
     # for r in replies:
     #     db.session.delete(r)
     db.session.delete(c)
     db.session.commit()
+
+    # 更新缓存内最近评论数据
+    update_commented_topics(c.author_id)
 
     return redirect(url_for('topic.detail', id=c.topic_id))

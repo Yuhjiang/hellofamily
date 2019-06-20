@@ -9,7 +9,7 @@ class Comment(db.Model):
     created_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.id'))
-    reply = db.relationship('Reply', backref='comment', lazy='dynamic', cascade='all, delete-orphan')
+    replies = db.relationship('Reply', backref='comment', lazy='dynamic', cascade='all, delete-orphan')
 
     def json(self):
         d = dict()
