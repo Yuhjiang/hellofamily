@@ -10,6 +10,7 @@
         <link type="text/css" rel="stylesheet" href="/static/css/hellofamily.css">
     {% endblock styles %}
     <title>{% block title %}{% endblock title %}</title>
+    {{ bootstrap.load_js() }}
     {% endblock head %}
 </head>
 <body>
@@ -97,7 +98,7 @@
 {% endblock content %}
 </div>
 {% block scripts %}
-
 {% endblock scripts %}
+
 </body>
 </html>
