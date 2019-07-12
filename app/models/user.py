@@ -9,6 +9,7 @@ from flask import current_app
 from .permission import Permission
 from .topic import Topic
 from .comment import Comment
+from .follow import Follow
 
 
 class User(UserMixin, db.Model):
@@ -27,6 +28,12 @@ class User(UserMixin, db.Model):
     icon = db.Column(db.String(128), default='/static/images/helloproject.ico')
     topics = db.relationship('Topic', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='comment_author', lazy='dynamic')
+    followed = db.relationship('Follow', foreign_keys=[Follow.follower_id],
+                               backref=db.backref('followers', lazy='joined'),
+                               lazy='dynamic', cascade='all, delete-orphan')
+    followers = db.relationship('Follow', foreign_keys=[Follow.followed_id],
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic', cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -158,6 +165,47 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
         db.session.commit()
+
+    def follow(self, user):
+        """
+        关注某人
+        :param user: 被关注的人
+        """
+        if not self.is_following(user):
+            f = Follow(follower_id=self.id, followed_id=user.id)
+            db.session.add(f)
+
+    def unfollow(self, user):
+        """
+        取消关注某人
+        :param user: 取消关注的人
+        :return:
+        """
+        f = self.followed.filter_by(followed_id=user.id).first()
+        if f:
+            db.session.delete(f)
+
+    def is_following(self, user):
+        """
+        是否关注某人
+        :param user:
+        :return:
+        """
+        if user.id is None:
+            return False
+        return self.followed.filter_by(
+            followed_id=user.id).first() is not None
+
+    def is_followed_by(self, user):
+        """
+        是否被某人关注
+        :param user:
+        :return:
+        """
+        if user.id is None:
+            return False
+        return self.followers.filter_by(
+            follower_id=user.id).first() is not None
 
 
 @login_manager.user_loader

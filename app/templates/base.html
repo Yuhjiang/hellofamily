@@ -59,13 +59,27 @@
             <div class="card-body">
                 <div class="user-icon">
                     {% if current_user.is_authenticated %}
-                        <img src="{{ current_user.icon }}">{{ current_user.name }}
+                        <img src="{{ current_user.icon }}">&nbsp;{{ current_user.name }}
                     {% else %}
                         <img src="/static/images/helloproject.ico">
                     {% endif %}
                 </div>
                 <p class="card-text">
                     {{ current_user.about_me }}
+                </p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">
+                {% if current_user.is_authenticated %}
+                    <a class="btn btn-success btn-sm" href="{{ url_for('people.follow', id=current_user.id) }}">关注</a>{{ current_user.followed.count() }}
+                    {% else %}
+                    {% endif %}
+                {% if current_user.is_authenticated %}
+                    <a class="btn btn-secondary btn-sm ml-5" href="{{ url_for('people.follower', id=current_user.id) }}">粉丝</a>{{ current_user.followers.count() }}
+                    {% else %}
+                    {% endif %}
                 </p>
             </div>
         </div>
@@ -83,9 +97,7 @@
 {% endblock content %}
 </div>
 {% block scripts %}
-    {{ bootstrap.load_js() }}
-    {{ moment.include_moment() }}
-    {{ moment.locale('zh-cn') }}
+
 {% endblock scripts %}
 </body>
 </html>

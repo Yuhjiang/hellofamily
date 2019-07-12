@@ -2,12 +2,15 @@ from flask import render_template, session, redirect, url_for, current_app, flas
 from . import people
 from flask_login import login_user, login_required, logout_user, current_user
 from ..models.user import User
+from ..models.permission import Permission
+from ..models.follow import Follow
 from .. import db
 from .forms import LoginForm, RegistrationForm, EditProfileAdminForm, UpdateIcon, \
     ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 from werkzeug.utils import secure_filename
 import os
 from ..mail import send_email
+from ..decorators import permission_required
 
 
 # @people.before_app_request
@@ -71,7 +74,7 @@ def logout():
 
 @people.route('/setting')
 @login_required
-def profile():
+def setting():
     info_form = EditProfileAdminForm()
     icon_form = UpdateIcon()
     info_form.location.data = current_user.location
@@ -194,3 +197,49 @@ def change_email(token):
     else:
         flash('激活链接不正确或已过期')
     return redirect(url_for('topic.index'))
+
+
+@people.route('/<int:id>/follow')
+def follow(id):
+    user = User.query.get(id)
+    followed = user.followed.all()
+    return render_template('user/followed.html', user=user, followed=followed)
+
+
+@people.route('/<int:id>/follower')
+def follower(id):
+    user = User.query.get(id)
+    followers = user.followers.all()
+    return render_template('user/follower.html', user=user, followers=followers)
+
+
+@people.route('/<int:id>/profile')
+def profile(id):
+    user = User.query.get(id)
+    return render_template('user/profile.html', user=user)
+
+
+@people.route('/follow/<int:id>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def follow_user(id):
+    user = User.query.get(id)
+    if user is None:
+        return redirect('.index')
+    current_user.follow(user)
+    db.session.commit()
+    flash('你已经关注了 {}'.format(user.name))
+    return redirect(url_for('.profile', id=user.id))
+
+
+@people.route('/unfollow/<int:id>')
+@login_required
+@permission_required(Permission.FOLLOW)
+def unfollow_user(id):
+    user = User.query.get(id)
+    if user is None:
+        return redirect('.index')
+    current_user.unfollow(user)
+    db.session.commit()
+    flash('你已经取消关注 {}'.format(user.name))
+    return redirect(url_for('.profile', id=user.id))

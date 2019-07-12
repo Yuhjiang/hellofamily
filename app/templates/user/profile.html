@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %} {{ user.username }}的主页 {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                个人信息
+                {% if current_user.is_following(user) %}
+                <a class="btn btn-secondary float-md-right" href="{{ url_for('.unfollow_user', id=user.id) }}">已关注</a>
+                {% elif current_user.id != user.id %}
+                <a class="btn btn-success float-md-right" href="{{ url_for('.follow_user', id=user.id) }}">关注TA</a>
+                {% else %}
+                {% endif %}
+            </div>
+            <img class="card-img-top m-auto" src="{{ user.icon }}" alt="头像" style="width: 15%">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-control-label" for="name">昵称</label>
+                            <input class="form-control" id="name" name="name" type="text" value="{{ user.username }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-control-label" for="name">地区</label>
+                            <input class="form-control" id="name" name="name" type="text" value="{{ user.location }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label class="form-control-label" for="name">关于我</label>
+                            <input class="form-control" id="name" name="name" type="text" value="{{ user.about_me }}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

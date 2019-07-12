@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }}的粉丝{% endblock %}
+
+{% block  content %}
+<div class="container">
+    <div class="card">
+        <div class="list-group list-group-flush">
+            {% for u in followers %}
+            <li class="list-group-item">
+                <div class="user-icon">
+                    <img src="{{ u.followers.icon }}"> {{ u.followers.username }}
+                </div>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

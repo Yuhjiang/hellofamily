@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ user.username }}的关注{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="list-group list-group-flush">
+            {% for u in followed %}
+            <li class="list-group-item">
+                <div class="user-icon">
+                    <img src="{{ u.followed.icon }}" alt="用户头像">&nbsp; {{ u.followed.username }}
+                </div>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

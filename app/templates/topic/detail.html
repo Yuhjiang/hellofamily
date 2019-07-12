@@ -17,7 +17,8 @@
             </div>
             <h6 class="card-subtitle mb-1 text-muted">
                 <br>&nbsp;
-                <span>&#10047 作者：{{ topic.author.username }}</span>
+                <span>&#10047 作者：<a href="{{ url_for('people.profile', id=topic.author.id) }}" style="color: #6c757d">{{ topic.author.username }}</a>
+                </span>
                 <span>&#10047 {{ moment(topic.created_time).fromNow(refresh=True) }}</span>
                 <span><a href="{{ url_for('topic.edit', id=topic.id) }}" style="color: #6c757d">&#10047 编辑</a></span>
                 <span><a href="{{ url_for('topic.delete', id=topic.id) }}" style="color: #6c757d">&#10047 删除</a></span>
@@ -91,4 +92,7 @@
     }
     __main()
 </script>
+    {{ bootstrap.load_js() }}
+    {{ moment.include_moment() }}
+    {{ moment.locale('zh-cn') }}
 {% endblock %}
