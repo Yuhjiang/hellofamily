@@ -60,7 +60,8 @@
             <div class="card-body">
                 <div class="user-icon">
                     {% if current_user.is_authenticated %}
-                        <img src="{{ current_user.icon }}">&nbsp;{{ current_user.name }}
+                        <img src="{{ current_user.icon }}">&nbsp;&nbsp;
+                        <a href="{{ url_for('people.profile', id=current_user.id) }}">{{ current_user.name }}</a>
                     {% else %}
                         <img src="/static/images/helloproject.ico">
                     {% endif %}
@@ -74,11 +75,11 @@
             <div class="card-body">
                 <p class="card-text">
                 {% if current_user.is_authenticated %}
-                    <a class="btn btn-success btn-sm" href="{{ url_for('people.follow', id=current_user.id) }}">关注</a>{{ current_user.followed.count() }}
+                    <a class="btn btn-success btn-sm" href="{{ url_for('people.follow', id=current_user.id) }}">关注</a>&nbsp;{{ current_user.followed.count() }}
                     {% else %}
                     {% endif %}
                 {% if current_user.is_authenticated %}
-                    <a class="btn btn-secondary btn-sm ml-5" href="{{ url_for('people.follower', id=current_user.id) }}">粉丝</a>{{ current_user.followers.count() }}
+                    <a class="btn btn-secondary btn-sm ml-5" href="{{ url_for('people.follower', id=current_user.id) }}">粉丝</a>&nbsp;{{ current_user.followers.count() }}
                     {% else %}
                     {% endif %}
                 </p>

@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import os
 from ..mail import send_email
 from ..decorators import permission_required
+from ..topic import created_topic
 
 
 # @people.before_app_request
@@ -216,7 +217,8 @@ def follower(id):
 @people.route('/<int:id>/profile')
 def profile(id):
     user = User.query.get(id)
-    return render_template('user/profile.html', user=user)
+    topics = created_topic(author_id=id)
+    return render_template('user/profile.html', user=user, topics=topics)
 
 
 @people.route('/follow/<int:id>')

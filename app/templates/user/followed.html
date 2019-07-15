@@ -8,7 +8,12 @@
             {% for u in followed %}
             <li class="list-group-item">
                 <div class="user-icon">
-                    <img src="{{ u.followed.icon }}" alt="用户头像">&nbsp; {{ u.followed.username }}
+                    <img src="{{ u.followed.icon }}" alt="用户头像">&nbsp;
+                    &nbsp;
+                    <a href="{{ url_for('people.profile', id=u.followed.id) }}">{{ u.followed.username }}</a>
+                    <q class="text-md-right">
+                        {{ u.followed.about_me }}
+                    </q>
                 </div>
             </li>
             {% endfor %}
