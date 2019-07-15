@@ -85,6 +85,35 @@ def setting():
     return render_template('user/setting.html', info_form=info_form, icon_form=icon_form)
 
 
+@people.route('/information', methods=['POST'])
+@login_required
+def information():
+    form = EditProfileAdminForm()
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.location = form.location.data
+        current_user.about_me = form.about_me.data
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+
+    return redirect(url_for('.setting'))
+
+
+@people.route('/icon', methods=['POST'])
+@login_required
+def icon():
+    form = UpdateIcon()
+    if form.validate_on_submit():
+        filename = secure_filename(form.icon.data.filename)
+        filepath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static/images/' + filename)
+        current_user.icon = '/static/images/' + filename
+        form.icon.data.save(filepath)
+        db.session.add(current_user._get_current_object())
+        db.session.commit()
+
+    return redirect(url_for('.setting'))
+
+
 @people.route('/confirm/<token>')
 @login_required
 def confirm(token):
