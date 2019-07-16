@@ -8,6 +8,7 @@ from app.models.comment import Comment
 from app.models.reply import Reply
 from app.models.permission import Permission
 from app.models.board import Board
+from app.chatroom import socketio
 
 
 app = create_app('development')
@@ -32,4 +33,5 @@ def make_shell_context():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    socketio.run(app)
