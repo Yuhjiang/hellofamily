@@ -51,18 +51,20 @@ def create_app(config_name):
     migrate.init_app(app)
     moment.init_app(app)
     admin.init_app(app)
+    socketio.init_app(app)
 
     # 注册蓝图
     from .main import main as main_blueprint
     from .user import people as people_blueprint
     from .topic import topic as topic_blueprint
     from .chatroom import chatroom as chatroom_blueprint
+    from .api import api as api_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(people_blueprint, url_prefix='/user')
     app.register_blueprint(topic_blueprint, url_prefix='/topic')
     app.register_blueprint(chatroom_blueprint, url_prefix='/chatroom')
-    socketio.init_app(app)
+    app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
     return app
 

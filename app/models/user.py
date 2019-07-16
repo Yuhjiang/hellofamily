@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from datetime import datetime
-from flask import current_app
+from flask import current_app, url_for
 from .permission import Permission
 from .topic import Topic
 from .comment import Comment
@@ -206,6 +206,46 @@ class User(UserMixin, db.Model):
             return False
         return self.followers.filter_by(
             follower_id=user.id).first() is not None
+
+    def generate_auth_token(self, expiration):
+        """
+        生成用于REST API身份验证的令牌
+        验证基于HTTPAuth
+        :param expiration: 过期时间
+        :return: 令牌
+        """
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_auth_token(token):
+        """
+        验证REST API身份验证的令牌是否有效
+        :param token: 令牌，包含了user.id
+        :return: 从令牌里提取出的用户数据
+        """
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.query.get(data['id'])
+
+    def to_json(self) -> dict:
+        """
+        适用于REST API的dict格式的user数据，返回数据后会在路由中jsonify处理
+        :return:字典格式的user数据
+        """
+        json_user = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen,
+            'topics_url': url_for('api.get_user_topics', id=self.id),
+            'followed_topics_url': url_for('api.get_user_followed_topics', id=self.id),
+            'topic_count': self.topics.count()
+        }
+        return json_user
 
 
 @login_manager.user_loader

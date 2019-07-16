@@ -2,6 +2,8 @@ from .. import db
 from datetime import datetime
 from .comment import Comment
 from .reply import Reply
+from flask import url_for
+from app.exceptions import ValidationError
 
 
 class Topic(db.Model):
@@ -22,3 +24,31 @@ class Topic(db.Model):
                 v = getattr(self, attr)
                 d[attr] = v
         return d
+
+    def to_json(self) -> dict:
+        """
+        适用于REST API的dict格式的topic数据，返回数据后会在路由中jsonify处理
+        :return:字典格式的topic数据
+        """
+        json_topic = {
+            'url': url_for('api.get_topic', id=self.id),
+            'body': self.body,
+            'timestamp': self.created_time,
+            'author_url': url_for('api.get_user', id=self.author_id),
+            'comments_url': url_for('api.get_topic_comments', id=self.id),
+            'comment_count': self.comments.count(),
+        }
+        return json_topic
+
+    @staticmethod
+    def form_json(json_topic):
+        """
+        利用API发送的json数据生成新的topic
+        :param json_topic: request.json
+        :return: 新Topic对象, author信息在api.new_topic()中完善
+        """
+        body = json_topic.get('body')
+        if body is None or body == '':
+            raise ValidationError('topic doest not have a body')
+        return Topic(body=body)
+
