@@ -9,6 +9,7 @@ auth = HTTPBasicAuth()
 
 @auth.verify_password
 def verify_password(email_or_token, password):
+    print(email_or_token, password)
     if email_or_token == '':
         return False
     if password == '':
@@ -22,7 +23,7 @@ def verify_password(email_or_token, password):
         return None
     g.current_user = user
     g.token_used = False
-
+    print(123, user.verify_password(password))
     return user.verify_password(password)
 
 
@@ -38,7 +39,7 @@ def before_request():
         return forbidden('Unconfirmed account')
 
 
-@api.route('/tokens/', methods='POST')
+@api.route('/tokens/', methods=['POST'])
 def get_token():
     # g.token_used为了避免用户绕过令牌过期机制，使用旧令牌请求新令牌
     if g.current_user.is_anonymous or g.token_used:

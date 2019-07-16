@@ -34,8 +34,8 @@ class Topic(db.Model):
             'url': url_for('api.get_topic', id=self.id),
             'body': self.body,
             'timestamp': self.created_time,
-            'author_url': url_for('api.get_user', id=self.author_id),
-            'comments_url': url_for('api.get_topic_comments', id=self.id),
+            # 'author_url': url_for('api.get_user', id=self.author_id),
+            # 'comments_url': url_for('api.get_topic_comments', id=self.id),
             'comment_count': self.comments.count(),
         }
         return json_topic

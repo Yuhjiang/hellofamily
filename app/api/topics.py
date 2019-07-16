@@ -30,7 +30,7 @@ def get_topics():
     """
     topics = Topic.query.all()
 
-    return jsonify({'topics': [topic.to_json()] for topic in topics})
+    return jsonify({'topics': [topic.to_json() for topic in topics]})
 
 
 @api.route('/topics/<int:id>')
