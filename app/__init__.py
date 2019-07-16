@@ -3,9 +3,8 @@
 2. 配置app，增加插件
 3. 注册路由蓝图
 """
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
-from flask_moment import Moment
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
@@ -13,6 +12,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from app.chatroom import socketio
 from config import config
 
 
@@ -56,10 +56,13 @@ def create_app(config_name):
     from .main import main as main_blueprint
     from .user import people as people_blueprint
     from .topic import topic as topic_blueprint
+    from .chatroom import chatroom as chatroom_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(people_blueprint, url_prefix='/user')
     app.register_blueprint(topic_blueprint, url_prefix='/topic')
+    app.register_blueprint(chatroom_blueprint, url_prefix='/chatroom')
+    socketio.init_app(app)
 
     return app
 
