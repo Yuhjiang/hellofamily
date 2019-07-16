@@ -8,13 +8,12 @@
             {% for u in followers %}
             <li class="list-group-item">
                 <div class="user-icon">
-                    <img src="{{ u.followers.icon }}">
+                    <img src="{{ u.followers.icon }}" alt="用户头像">
                     &nbsp;
-                    <a href="{{ url_for('people.profile', id=followers.id) }}">{{ u.followers.username }}</a>
-                    &nbsp;
-                    <blockquote>
+                    <a href="{{ url_for('people.profile', id=u.followers.id) }}">{{ u.followers.username }}</a>&nbsp;
+                    <q class="text-md-right">
                         {{ u.followers.about_me }}
-                    </blockquote>
+                    </q>
                 </div>
             </li>
             {% endfor %}

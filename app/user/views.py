@@ -61,7 +61,8 @@ def register():
         db.session.commit()
         token = user.generate_confirmation_token()
         send_email(user.email, '确认并激活你的账户', 'user/email/confirm', user=user, token=token)
-        return redirect('topic.index')
+        flash('一封账号激活邮件已发到你的邮箱，请确认')
+        return redirect(url_for('topic.index'))
     flash('用户名或邮箱已被注册')
     return redirect('./')
 
