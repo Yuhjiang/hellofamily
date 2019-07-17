@@ -32,6 +32,7 @@ class Topic(db.Model):
         """
         json_topic = {
             'url': url_for('api.get_topic', id=self.id),
+            'title': self.title,
             'body': self.body,
             'timestamp': self.created_time,
             # 'author_url': url_for('api.get_user', id=self.author_id),
@@ -41,14 +42,15 @@ class Topic(db.Model):
         return json_topic
 
     @staticmethod
-    def form_json(json_topic):
+    def from_json(json_topic):
         """
         利用API发送的json数据生成新的topic
         :param json_topic: request.json
         :return: 新Topic对象, author信息在api.new_topic()中完善
         """
         body = json_topic.get('body')
-        if body is None or body == '':
-            raise ValidationError('topic doest not have a body')
-        return Topic(body=body)
-
+        title = json_topic.get('title')
+        print(body, title)
+        if body is None or body == '' or title is None or title == '':
+            raise ValidationError('Topic doest not have a body or title')
+        return Topic(body=body, title=title)

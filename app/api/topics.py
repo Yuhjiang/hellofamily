@@ -16,7 +16,7 @@ def new_topic():
     """
     topic = Topic.from_json(request.json)   # 仅包含body
     topic.author = g.current_user           # 添加author
-    db.session.add(Topic)
+    db.session.add(topic)
     db.session.commit()
 
     return jsonify(topic.to_json()), 201, {'Location': url_for('api.get_topic', id=topic.id)}
@@ -57,6 +57,7 @@ def edit_topic(id):
     if g.current_user != topic.author_id and not g.current_user.can(Permission.ADMIN):
         return forbidden('Insufficient permission')
     topic.body = request.json.get('body', topic.body)
+    topic.title = request.json.get('title', topic.title)
     db.session.add(topic)
     db.session.commit()
 

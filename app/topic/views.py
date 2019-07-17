@@ -9,7 +9,7 @@ from . import topic, created_topic, \
 from ..models.comment import Comment
 from ..models.reply import Reply
 from ..models.permission import Permission
-from flask import render_template, redirect, url_for, request, flash, current_app
+from flask import render_template, redirect, url_for, request, flash, current_app, session
 from ..decorators import permission_required, admin_required, comment_delete, topic_delete, same_user_required
 
 
