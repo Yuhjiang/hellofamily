@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form_row %}
+
+{% block title %} Hello!Project SNS图片库 {% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link type="text/css" rel="stylesheet" href="../../static/css/ta_phtolst.css">
+<link type="text/css" rel="stylesheet" href="../../static/css/common.css">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="container">
+        <form action="/face/" method="post" class="form" role="form">
+            {{ form.csrf_token }}
+            {{ render_form_row([form.group, form.member, form.start_time, form.end_time])}}
+            <div class="form-row">
+                <div class="col">
+                <input class="btn btn-success btn-sm float-right" id="submit" name="submit" type="submit" value="确认">
+                </div>
+            </div>
+            <br>
+        </form>
+        <div class="m_photo_list_a" node-type="photo-list">
+            <ul class="photoList clearfix">
+                {% for image in images %}
+                <li>
+                    <dl class="m_photoItem m_photoItem_a phtItem_hv">
+                        <dt class="photo face">
+                            <a href="{{ image['url'] }}">
+                                <img src="{{ image['url'] }}">
+                            </a>
+                        </dt>
+                    </dl>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="../../static/js/face.js"></script>
+{% endblock %}

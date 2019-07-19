@@ -24,6 +24,10 @@ body {
     width: 48px;
 }
 
+.face img {
+    width: 200px;
+}
+
 #sidebar {
   width: 290px;
   font-size: 14px;

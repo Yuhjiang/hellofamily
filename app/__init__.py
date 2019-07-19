@@ -59,12 +59,14 @@ def create_app(config_name):
     from .topic import topic as topic_blueprint
     from .chatroom import chatroom as chatroom_blueprint
     from .api import api as api_blueprint
+    from .hpface import face as face_blueprint
 
     app.register_blueprint(main_blueprint)
     app.register_blueprint(people_blueprint, url_prefix='/user')
     app.register_blueprint(topic_blueprint, url_prefix='/topic')
     app.register_blueprint(chatroom_blueprint, url_prefix='/chatroom')
     app.register_blueprint(api_blueprint, url_prefix='/api/v1')
+    app.register_blueprint(face_blueprint, url_prefix='/face')
 
     return app
 
