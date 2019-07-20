@@ -4,12 +4,12 @@ var options = member.querySelectorAll('option')
 options = Array.prototype.slice.call(options)
 
 var groups = {
-    'morningmusume': [60, 75],
+    'morningmusume': [60, 74],
     'angerme': [1, 14],
     'juicejuice': [45, 55],
     'countrygirls': [26, 31],
     'kobushifactory': [55, 60],
-    'tsubakifactory': [75, 83],
+    'tsubakifactory': [74, 83],
     'beyooooonds': [14, 26],
     'helloprokenshusei': [31, 42],
     'helloprokenshuseihokkaido': [42, 45]
