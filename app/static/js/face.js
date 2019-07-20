@@ -44,6 +44,8 @@ var templateOption = function(value, text) {
 
 var bindEvents = function() {
     bindEventGroup()
+    bindEventCp()
+    bindEventNormal()
 }
 
 var option = group.options[group.selectedIndex].value
@@ -69,16 +71,12 @@ var ajax = function(method, path, data, responseCallBack) {
 
 var photo_list = document.querySelector('.photoList')
 
-var api_images = function(form, callback) {
-    var path = '/face/cp'
-    ajax('POST', path, form, callback)
-}
 
 var image_template = function(url) {
     t = `<li>
                     <dl class="m_photoItem m_photoItem_a phtItem_hv">
                         <dt class="photo face">
-                            <a href="${url}" target="'_blank">
+                            <a href="${url}" target="_blank">
                                 <img src="${url}">
                             </a>
                         </dt>
@@ -104,17 +102,38 @@ var bindEventCp = function() {
         var start_time = cp_form.querySelector('#start_time')
         var end_time = cp_form.querySelector('#end_time')
 
-        var form = {
+        var args = {
             member1: member1[member1.selectedIndex].value,
             member2: member1[member2.selectedIndex].value,
             start_time: start_time.value,
             end_time: end_time.value,
         }
-        api_images(form, function(images) {
-            insertImages(images)
-        })
+        var path = `/face/cp/?member1=${args['member1']}&member2=${args['member2']}&start_time=${args['start_time']}&end_time=${args['end_time']}
+    `
+        window.location.href = path
+
+    })
+}
+
+var form = document.querySelector('.form')
+var bindEventNormal = function() {
+    var button = document.querySelector('#button')
+    button.addEventListener('click', function() {
+        var group = form.querySelector('#group')
+        var member = form.querySelector('#member')
+        var start_time = form.querySelector('#start_time')
+        var end_time = form.querySelector('#end_time')
+
+        var args = {
+            group: group[group.selectedIndex].value,
+            member: member[member.selectedIndex].value,
+            start_time: start_time.value,
+            end_time: end_time.value,
+        }
+        var path = `/face/normal/?group=${args['group']}&member=${args['member']}&start_time=${args['start_time']}&end_time=${args['end_time']}
+    `
+        window.location.href=path
     })
 }
 
 bindEvents()
-bindEventCp()

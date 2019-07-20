@@ -1,5 +1,34 @@
+{% macro pagination_widget_normal(pagination, endpoint, group, member, start_time, end_time) %}
+<ul class="pagination justify-content-center">
+    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+        <a class="page-link" href="{% if pagination.has_prev %} {{
+                url_for(endpoint, group=group, member=member, start_time=start_time, end_time=end_time, page=pagination.page - 1)
+                }} {% else %}#{% endif %}"> &laquo; </a>
+    </li>
+
+    {% for p in pagination.iter_pages(left_edge=2, left_current=5, right_current=5, right_edge=2) %}
+        {% if p %}
+            {% if p == pagination.page %}
+            <li class="page-item active">
+                <a class="page-link" href="{{ url_for(endpoint, group=group, member=member, start_time=start_time, end_time=end_time, page=p) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for(endpoint, group=group, member=member, start_time=start_time, end_time=end_time, page=p) }}">{{ p }}</a>
+            </li>
+            {% endif %}
+        {% else %}
+            <li class="page-item disabled"><a href="#"> &hellip; </a></li>
+        {% endif %}
+    {% endfor %}
+    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+        <a class="page-link" href="{% if pagination.has_next %} {{ url_for(endpoint, group=group, member=member, start_time=start_time, end_time=end_time, page=pagination.page + 1) }} {% else %}#{% endif %}"> &raquo; </a>
+    </li>
+</ul>
+{% endmacro %}
+
 {% macro pagination_widget(pagination, endpoint) %}
-<ul class="pagination">
+<ul class="pagination justify-content-center">
     <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
         <a class="page-link" href="{% if pagination.has_prev %} {{
                 url_for(endpoint, page=pagination.page - 1, **kwargs)
@@ -22,6 +51,35 @@
     {% endfor %}
     <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
         <a class="page-link" href="{% if pagination.has_next %} {{ url_for(endpoint, page=pagination.page + 1, **kwargs) }} {% else %}#{% endif %}"> &raquo; </a>
+    </li>
+</ul>
+{% endmacro %}
+
+{% macro pagination_widget_cp(pagination, endpoint, member1, member2, start_time, end_time) %}
+<ul class="pagination justify-content-center">
+    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+        <a class="page-link" href="{% if pagination.has_prev %} {{
+                url_for(endpoint, member1=member1, member2=member2, start_time=start_time, end_time=end_time, page=pagination.page - 1)
+                }} {% else %}#{% endif %}"> &laquo; </a>
+    </li>
+
+    {% for p in pagination.iter_pages(left_edge=2, left_current=5, right_current=5, right_edge=2) %}
+        {% if p %}
+            {% if p == pagination.page %}
+            <li class="page-item active">
+                <a class="page-link" href="{{ url_for(endpoint, member1=member1, member2=member2, start_time=start_time, end_time=end_time, page=p) }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for(endpoint, member1=member1, member2=member2, start_time=start_time, end_time=end_time, page=p) }}">{{ p }}</a>
+            </li>
+            {% endif %}
+        {% else %}
+            <li class="page-item disabled"><a href="#"> &hellip; </a></li>
+        {% endif %}
+    {% endfor %}
+    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+        <a class="page-link" href="{% if pagination.has_next %} {{ url_for(endpoint, member1=member1, member2=member2, start_time=start_time, end_time=end_time, page=pagination.page + 1) }} {% else %}#{% endif %}"> &raquo; </a>
     </li>
 </ul>
 {% endmacro %}

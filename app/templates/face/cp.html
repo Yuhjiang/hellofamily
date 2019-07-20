@@ -44,7 +44,7 @@
                 {% endfor %}
             </ul>
         </div>
-    {{ macros.pagination_widget(pagination, endpoint) }}
+    {{ macros.pagination_widget_cp(pagination, endpoint, member1=search['member1'], member2=search['member2'], start_time=search['start_time'], end_time=search['end_time']) }}
     </div>
 </div>
 {% endblock %}

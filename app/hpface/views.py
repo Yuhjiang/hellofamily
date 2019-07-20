@@ -1,7 +1,8 @@
 from . import face, mongodb
 from .forms import CpForm, FaceForm
-from flask import render_template, redirect, url_for, request, jsonify
+from flask import render_template, request, jsonify
 from datetime import datetime
+from app.utils import paginate
 
 
 def search_members(member):
@@ -21,6 +22,9 @@ def index():
     form = FaceForm()
     cpform = CpForm()
     images_db = mongodb['images']
+    page = request.args.get('page', 1, type=int)
+
+    images = images_db.find().limit(10)
 
     if form.validate_on_submit():
         print(form.group.data, form.member.data, form.start_time.data, form.end_time.data)
@@ -34,39 +38,66 @@ def index():
             images = images_db.find(
                 {'members.name_en': form.member.data,
                  'timestamp': {'$gte': start_time, '$lte': end_time}})
-        images = list(images)
-        return render_template('face/index.html', form=form, cpform=cpform, images=images)
+        images = images
 
-    # if cpform.validate_on_submit():
-    #     print(cpform.member1.data, cpform.member2.data, cpform.start_time.data, cpform.end_time.data)
-    #     start_time = datetime.strptime(str(cpform.start_time.data), '%Y-%m-%d').timestamp()
-    #     end_time = datetime.strptime(str(cpform.end_time.data), '%Y-%m-%d').timestamp()
-    #     member1, member2 = search_members(cpform.member1.data), search_members(cpform.member2.data)
-    #     images = images_db.find({'members': {'$all': [member1, member2]},
-    #                              'timestamp': {'$gte': start_time, '$lte': end_time}})
-    #     images = list(images)
-    #     return render_template('face/index.html', form=form, cpform=cpform, images=images)
+    pagination = paginate(images, page, 20)
+    images = pagination.items
 
-    images = list(images_db.find().limit(10))
-    return render_template('face/index.html', form=form, cpform=cpform, images=images)
+    return render_template('face/index.html', form=form, cpform=cpform, images=images, pagination=pagination, endpoint='face.index')
 
 
-@face.route('/cp', methods=['POST'])
-def cp():
-    data = request.json
+@face.route('/normal/', methods=['GET'])
+def normal():
+    form = FaceForm()
+    cpform = CpForm()
     images_db = mongodb['images']
-    start_time = datetime.strptime(data['start_time'], '%Y-%m-%d').timestamp()
-    end_time = datetime.strptime(data['end_time'], '%Y-%m-%d').timestamp()
-    member1, member2 = search_members(data['member1']), search_members(data['member2'])
-    images = images_db.find({'members': {'$all': [member1, member2]},
-                             'timestamp': {'$gte': start_time, '$lte': end_time}})
-    images = filter(lambda img: len(img['members']) == 2, list(images))
 
-    res = []
-    for img in images:
-        res.append({
-            'url': img['url'],
-            'timestamp': img['timestamp'],
-            'members': [m['name_en'] for m in img['members']]
-        })
-    return jsonify(res)
+    group = request.args.get('group')
+    member = request.args.get('member')
+    start_time = request.args.get('start_time')
+    end_time = request.args.get('end_time')
+    page = request.args.get('page', 1, type=int)
+
+    start_timestamp = datetime.strptime(str(start_time), '%Y-%m-%d').timestamp()
+    end_timestamp = datetime.strptime(str(end_time), '%Y-%m-%d').timestamp()
+    if member == 'all':
+        images = images_db.find(
+            {'members.group': group,
+             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+    else:
+        images = images_db.find(
+            {'members.name_en': member,
+             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+
+    pagination = paginate(images, page, 20)
+    images = pagination.items
+
+    search = {'group': group, 'member': member, 'start_time': start_time, 'end_time': end_time}
+    return render_template('face/normal.html', form=form, cpform=cpform, images=images, pagination=pagination, endpoint='face.normal', search=search)
+
+
+@face.route('/cp/', methods=['GET'])
+def cp():
+    form = FaceForm()
+    cpform = CpForm()
+    images_db = mongodb['images']
+
+    member1 = request.args.get('member1')
+    member2 = request.args.get('member2')
+    start_time = request.args.get('start_time')
+    end_time = request.args.get('end_time')
+    page = request.args.get('page', 1, type=int)
+
+    member1, member2 = search_members(member1), search_members(member2)
+    start_timestamp = datetime.strptime(str(start_time), '%Y-%m-%d').timestamp()
+    end_timestamp = datetime.strptime(str(end_time), '%Y-%m-%d').timestamp()
+    # 寻找CP，限定两人
+    images = images_db.find({'members': {'$all': [member1, member2]},
+                             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+
+    pagination = paginate(images, page, 20, member_num=2)
+
+    images = pagination.items
+
+    search = {'member1': member1, 'member2': member2, 'start_time': start_time, 'end_time': end_time}
+    return render_template('face/cp.html', form=form, cpform=cpform, images=images, pagination=pagination, endpoint='face.cp', search=search)
