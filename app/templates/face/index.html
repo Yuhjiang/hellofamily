@@ -20,8 +20,15 @@
                 <input class="btn btn-success btn-sm float-right" id="submit" name="submit" type="submit" value="确认">
                 </div>
             </div>
-            <br>
         </form>
+        <div class="cp-form">
+            {{ render_form_row([cpform.member1, cpform.member2, cpform.start_time, cpform.end_time])}}
+            <div class="form-row">
+                <div class="col">
+                    <button class="btn btn-success btn-sm float-right" id="cp">确认</button>
+                </div>
+            </div>
+        </div>
         <div class="m_photo_list_a" node-type="photo-list">
             <ul class="photoList clearfix">
                 {% for image in images %}

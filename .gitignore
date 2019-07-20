@@ -10,3 +10,4 @@ mirror.sh
 *.log
 .vagrant
 app/static/images
+backups

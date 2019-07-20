@@ -19,12 +19,34 @@ class FaceForm(FlaskForm):
         groups = mongodb['groups']
 
         choices = []
-        for i, group in enumerate(list(groups.find())):
+        for group in list(groups.find()):
             choices.append((group['name_en'], group['name_jp']))
         self.group.choices = choices
 
         members = mongodb['members']
         choices = [('all', '所有')]
-        for i, member in enumerate(list(members.find().sort('group'))):
+        for member in list(members.find().sort('group')):
             choices.append((member['name_en'], member['name_jp']))
         self.member.choices = choices
+
+
+class CpForm(FlaskForm):
+    """
+    用于嗑CP的表单
+    """
+    member1 = SelectField('成员A', coerce=str)
+    member2 = SelectField('成员B', coerce=str)
+    start_time = DateField('开始时间', format='%Y-%m-%d',
+                           default=datetime.now())
+    end_time = DateField('结束时间', format='%Y-%m-%d',
+                         default=datetime.now())
+    submit = SubmitField('确认')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = []
+        members = mongodb['members']
+        for member in list(members.find().sort('group')):
+            choices.append((member['name_en'], member['name_jp']))
+        self.member1.choices = choices
+        self.member2.choices = choices
