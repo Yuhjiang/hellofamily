@@ -6,26 +6,24 @@ from math import ceil
 from flask import abort
 
 
-def paginate(data, page=None, per_page=None, member_num=None):
+def paginate(data, page=None, per_page=None):
     """
     实现分页
     :param: data: 查询到的数据
     :param page: 当前页面
     :param per_page: 每一页数据数量
-    :param member_num: 检索图里的成员数
     :return:
     """
+    if page < 1:
+        page = 1
 
     items = data.limit(per_page).skip((page - 1) * per_page)
     items = list(items)
 
-    if member_num:
-        items = list(filter(lambda img: len(img['members']) == 2, list(items)))
-
-    if page < 1:
-        page = 1
-
-    total = len(items)
+    if page == 1 and len(items) < per_page:
+        total = len(items)
+    else:
+        total = data.count()
 
     return Pagination(data, page, per_page, total, items)
 

@@ -63,11 +63,11 @@ def normal():
     if member == 'all':
         images = images_db.find(
             {'members.group': group,
-             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}}).sort('timestamp', -1)
     else:
         images = images_db.find(
             {'members.name_en': member,
-             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}}).sort('timestamp', -1)
 
     pagination = paginate(images, page, 20)
     images = pagination.items
@@ -88,14 +88,14 @@ def cp():
     end_time = request.args.get('end_time')
     page = request.args.get('page', 1, type=int)
 
-    member1, member2 = search_members(member1), search_members(member2)
+    mem1, mem2 = search_members(member1), search_members(member2)
     start_timestamp = datetime.strptime(str(start_time), '%Y-%m-%d').timestamp()
     end_timestamp = datetime.strptime(str(end_time), '%Y-%m-%d').timestamp()
     # 寻找CP，限定两人
-    images = images_db.find({'members': {'$all': [member1, member2]},
-                             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}})
+    images = images_db.find({'members': {'$all': [mem1, mem2]},
+                             'timestamp': {'$gte': start_timestamp, '$lte': end_timestamp}, 'size': 2}).sort('timestamp', -1)
 
-    pagination = paginate(images, page, 20, member_num=2)
+    pagination = paginate(images, page, 20)
 
     images = pagination.items
 
