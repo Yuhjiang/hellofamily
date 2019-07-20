@@ -78,7 +78,7 @@ var image_template = function(url) {
     t = `<li>
                     <dl class="m_photoItem m_photoItem_a phtItem_hv">
                         <dt class="photo face">
-                            <a href="${url}">
+                            <a href="${url}" target="'_blank">
                                 <img src="${url}">
                             </a>
                         </dt>
