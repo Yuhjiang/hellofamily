@@ -21,7 +21,7 @@ class Config(object):
     SQLALCHEMY_POOL_TIMEOUT = 30                    # 数据库任务的过期时间
     CELERY_BROKER_URL = 'redis://localhost'
     CELERY_RESULT_BACKEND = 'redis://localhost'
-    FLASK_TOPICS_PER_PAGE = 10                       # 每页显示的文章数量
+    FLASK_TOPICS_PER_PAGE = 20                      # 每页显示的文章数量
 
     @staticmethod
     def init_app(app):

@@ -4,15 +4,33 @@ var options = member.querySelectorAll('option')
 options = Array.prototype.slice.call(options)
 
 var groups = {
-    'morningmusume': [60, 74],
-    'angerme': [1, 14],
-    'juicejuice': [45, 55],
-    'countrygirls': [26, 31],
-    'kobushifactory': [55, 60],
-    'tsubakifactory': [74, 83],
-    'beyooooonds': [14, 26],
-    'helloprokenshusei': [31, 42],
-    'helloprokenshuseihokkaido': [42, 45]
+    'morningmusume': [77, 121],
+    'angerme': [1, 19],
+    'juicejuice': [62, 72],
+    'countrygirls': [38, 43],
+    'kobushifactory': [72, 77],
+    'tsubakifactory': [123, 132],
+    'beyooooonds': [26, 38],
+    'helloprokenshusei': [48, 59],
+    'helloprokenshuseihokkaido': [59, 62],
+    'cute':[43, 48],
+    'berrykobo': [19, 26],
+    'others': [121, 123]
+}
+
+var group_options = {
+    'morningmusume': 0,
+    'angerme': 1,
+    'juicejuice': 2,
+    'countrygirls': 3,
+    'kobushifactory': 4,
+    'tsubakifactory': 5,
+    'beyooooonds': 6,
+    'helloprokenshusei': 7,
+    'helloprokenshuseihokkaido': 8,
+    'cute':9,
+    'berrykobo': 10,
+    'others': 11
 }
 
 // 绑定group选择事件
@@ -20,11 +38,8 @@ var bindEventGroup = function() {
     group.addEventListener('click', function() {
 
         var option = group.options[group.selectedIndex].value
-        console.log(option)
         var new_options = options.slice(groups[option][0], groups[option][1])
-        console.log(new_options)
         var t = template(new_options)
-        console.log(t)
         member.innerHTML = t
 
     })
@@ -136,4 +151,44 @@ var bindEventNormal = function() {
     })
 }
 
+var remember_choice = function () {
+    var args = window.location.search.split('?')
+    if (args.length === 1) {
+        return
+    }
+    args = args[1].split('&')
+    choices = {}
+    for (var i = 0; i < args.length; i++) {
+        var key_value = args[i].split('=')
+        choices[key_value[0]] = key_value[1]
+    }
+    console.log(choices)
+    if ('group' in choices) {
+        form.querySelector('#group').selectedIndex = group_options[choices['group']]
+        form.querySelector('#member').selectedIndex = get_option('#member', choices['member'])
+        form.querySelector('#start_time').value = choices['start_time']
+        form.querySelector('#end_time').value = choices['end_time']
+    }
+    else {
+        cp_form.querySelector('#member1').selectedIndex = get_option('#member1', choices['member1'])
+        cp_form.querySelector('#member2').selectedIndex = get_option('#member2', choices['member2'])
+        cp_form.querySelector('#start_time').value = choices['start_time']
+        cp_form.querySelector('#end_time').value = choices['end_time']
+    }
+
+
+}
+
+var get_option = function(loc, member) {
+    var options = document.querySelector(loc).options
+    for (var i = 0; i < options.length; i++) {
+        if (member === options[i].value) {
+            console.log(i)
+            return i
+        }
+    }
+    return -1
+}
+
 bindEvents()
+remember_choice()

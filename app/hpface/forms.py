@@ -19,7 +19,7 @@ class FaceForm(FlaskForm):
         groups = mongodb['groups']
 
         choices = []
-        for group in list(groups.find()):
+        for group in list(groups.find().sort('sort')):
             choices.append((group['name_en'], group['name_jp']))
         self.group.choices = choices
 
