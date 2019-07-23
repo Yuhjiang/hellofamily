@@ -29,7 +29,7 @@ var group_options = {
     'helloprokenshusei': 7,
     'helloprokenshuseihokkaido': 8,
     'cute':9,
-    'berrykobo': 10,
+    'berryzkobo': 10,
     'others': 11
 }
 
