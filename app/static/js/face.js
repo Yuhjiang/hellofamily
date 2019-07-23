@@ -165,6 +165,9 @@ var remember_choice = function () {
     console.log(choices)
     if ('group' in choices) {
         form.querySelector('#group').selectedIndex = group_options[choices['group']]
+        var new_options = options.slice(groups[choices['group']][0], groups[choices['group']][1])
+        var t = template(new_options)
+        member.innerHTML = t
         form.querySelector('#member').selectedIndex = get_option('#member', choices['member'])
         form.querySelector('#start_time').value = choices['start_time']
         form.querySelector('#end_time').value = choices['end_time']
@@ -181,6 +184,7 @@ var remember_choice = function () {
 
 var get_option = function(loc, member) {
     var options = document.querySelector(loc).options
+    console.log(options)
     for (var i = 0; i < options.length; i++) {
         if (member === options[i].value) {
             console.log(i)
