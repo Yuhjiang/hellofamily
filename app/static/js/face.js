@@ -14,7 +14,7 @@ var groups = {
     'helloprokenshusei': [48, 59],
     'helloprokenshuseihokkaido': [59, 62],
     'cute':[43, 48],
-    'berrykobo': [19, 26],
+    'berryzkobo': [19, 26],
     'others': [121, 123]
 }
 
