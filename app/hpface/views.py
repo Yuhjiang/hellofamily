@@ -24,7 +24,7 @@ def index():
     images_db = mongodb['images']
     page = request.args.get('page', 1, type=int)
 
-    images = images_db.find().limit(10)
+    images = images_db.find().sort('timestamp', -1)
 
     if form.validate_on_submit():
         print(form.group.data, form.member.data, form.start_time.data, form.end_time.data)
