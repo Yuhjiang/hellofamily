@@ -1,8 +1,8 @@
 """
 早安家族人脸识别脚本
 """
-from .utils import image_to_base64, download_picture, get_cookies
-from .config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
+from service.utils import image_to_base64, download_picture, get_cookies
+from service.config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
 import os
 import time
 from pymongo import MongoClient, errors

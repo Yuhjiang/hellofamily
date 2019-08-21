@@ -1,7 +1,7 @@
 import requests
 import os
 import base64
-from .config import Mongodb_uri
+from service.config import Mongodb_uri
 import pymongo
 
 
