@@ -1,14 +1,19 @@
 """
 早安家族人脸识别脚本
 """
-from service.utils import image_to_base64, download_picture, get_cookies
-from service.config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
+from utils import image_to_base64, download_picture, get_cookies
+from config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
 import os
 import time
 from pymongo import MongoClient, errors
 import requests
 import json
 from aip import AipFace
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    filename='hp_face.log')
 
 db = MongoClient(Mongodb_uri)
 my_db = db['helloproject']
@@ -17,7 +22,8 @@ members_db = my_db['members']
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 
 
-def face_multi_search(image, image_type, group_id_list='Hello_Project', save=False, match_threshold=70, max_face_num=10):
+def face_multi_search(image, image_type, group_id_list='Hello_Project', save=False, match_threshold=70,
+                      max_face_num=10):
     """
     在图片里识别成员
     :param image: 从mongodb获取image数据
@@ -80,6 +86,7 @@ def face_to_databases(image, face):
     :param face: face_multi_search()返回的数据
     """
     result = face['result']
+    logging.info(result)
     face_list = result['face_list']
     members = []
     for f in face_list:
@@ -125,7 +132,11 @@ def fetch_json_response(url):
         'Cookie': get_cookies()['cookie']
     }
     res = requests.get(url, headers=headers).text
-    res = json.loads(res)
+    logging.info('{} \n {}'.format(url, res))
+    try:
+        res = json.loads(res)
+    except:
+        return []
 
     if not res['result']:
         raise Exception('Failed to download the data', url)
