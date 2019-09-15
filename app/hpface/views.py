@@ -5,9 +5,9 @@ from flask_login import login_required
 
 from app.utils import paginate
 from ..decorators import permission_required
-from service.utils import update_cookies
+from ..service.utils import update_cookies, update_face
 from . import face, mongodb
-from .forms import CpForm, FaceForm, UpdateCookie
+from .forms import CpForm, FaceForm, UpdateCookie, UpdateFace
 from ..models.role import Permission
 
 
@@ -109,17 +109,19 @@ def cp():
     return render_template('face/cp.html', form=form, cpform=cpform, images=images, pagination=pagination, endpoint='face.cp', search=search)
 
 
-@login_required
 @face.route('/setting/', methods=['GET'])
+@login_required
 def setting():
     cookie_form = UpdateCookie()
+    face_form = UpdateFace()
 
-    return render_template('face/setting.html', cookie_form=cookie_form)
+    return render_template('face/setting.html',
+                           cookie_form=cookie_form,
+                           face_form=face_form)
 
 
-@login_required
-@permission_required(Permission.ADMIN)
 @face.route('/update_cookie', methods=['POST'])
+@permission_required(Permission.ADMIN)
 def update_cookie():
     cookie_form = UpdateCookie()
 
@@ -127,3 +129,17 @@ def update_cookie():
         update_cookies(cookie_form.cookie.data)
 
     return redirect(url_for('.setting'))
+
+
+@face.route('/update_face', methods=['POST'])
+@permission_required(Permission.ADMIN)
+@login_required
+def register_face():
+    form = UpdateFace()
+
+    if form.validate_on_submit():
+        image = form.face.data.read()
+        update_face(image, form.member.data)
+
+    return redirect(url_for('.setting'))
+

@@ -13,6 +13,14 @@
                 {{ render_form(cookie_form, action='/face/update_cookie', method='post')}}
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">
+                更新人脸
+            </div>
+            <div class="card-body">
+                {{ render_form(face_form, action='/face/update_face', method='post')}}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

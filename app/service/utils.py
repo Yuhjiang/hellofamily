@@ -7,9 +7,12 @@ from app.tasks import send_async
 from jinja2 import Environment, PackageLoader
 import secret
 from datetime import datetime
+from .service_config import API_KEY, APP_ID, SECRET_KEY
+from aip import AipFace
 
 
 env = Environment(loader=PackageLoader('app', 'templates'))
+client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 
 
 def valid_image(image):
@@ -65,6 +68,13 @@ def update_cookies(cookie):
     cookies = client['cookies']
 
     return cookies.insert_one({'cookie': cookie, 'update_time': datetime.now()})
+
+
+def update_face(image, member):
+    image_base64 = base64.b64encode(image).decode('utf-8')
+    result = client.addUser(image_base64, 'BASE64', 'Hello_Project', member)
+
+    return result
 
 
 def send_mail(to='jiang.yuhao0809@gmail.com', subject='运行报错', path='mail/error_notification', **kwargs):

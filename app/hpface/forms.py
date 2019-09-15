@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, DateField, SubmitField, StringField
+from wtforms import SelectField, DateField, SubmitField, StringField, FileField
 from wtforms.validators import DataRequired
 from . import mongodb
 from datetime import datetime
@@ -58,3 +58,22 @@ class UpdateCookie(FlaskForm):
     """
     cookie = StringField('Cookie', validators=[DataRequired()])
     submit = SubmitField('更新')
+
+
+class UpdateFace(FlaskForm):
+    """
+    更新人脸
+    """
+    face = FileField('上传人脸照片', validators=[DataRequired()])
+    member = SelectField('选择成员', coerce=str, validators=[DataRequired()])
+
+    submit = SubmitField('确认')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = []
+        members = mongodb['members']
+        for member in list(members.find().sort('group')):
+            choices.append((member['name_en'], member['name_jp']))
+
+        self.member.choices = choices
