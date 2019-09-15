@@ -1,8 +1,8 @@
 """
 早安家族人脸识别脚本
 """
-from utils import image_to_base64, download_picture, get_cookies
-from config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
+from service.utils import image_to_base64, download_picture, get_cookies, send_mail
+from service.service_config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
 import os
 import time
 from pymongo import MongoClient, errors
@@ -86,7 +86,6 @@ def face_to_databases(image, face):
     :param face: face_multi_search()返回的数据
     """
     result = face['result']
-    logging.info(result)
     face_list = result['face_list']
     members = []
     for f in face_list:
@@ -132,7 +131,6 @@ def fetch_json_response(url):
         'Cookie': get_cookies()['cookie']
     }
     res = requests.get(url, headers=headers).text
-    logging.info('{} \n {}'.format(url, res))
     try:
         res = json.loads(res)
     except:
@@ -193,7 +191,7 @@ def fetch_pictures_info(start=1, end=1, save=False, download=False):
 
             members_from_page.append(info)
 
-        return members_from_page
+    return members_from_page
 
 
 def job():
@@ -202,5 +200,6 @@ def job():
 
 
 if __name__ == '__main__':
-    fetch_pictures_info(1, 1, save=True, download=True)
+    fetch_pictures_info(1, 10, save=True, download=True)
     face_search()
+    send_mail()

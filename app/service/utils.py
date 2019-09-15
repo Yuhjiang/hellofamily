@@ -1,8 +1,11 @@
 import requests
 import os
 import base64
-from service.config import Mongodb_uri
+from service.service_config import Mongodb_uri
 import pymongo
+from app.tasks import send_async
+from flask import render_template
+import secret
 
 
 def valid_image(image):
@@ -50,3 +53,13 @@ def get_cookies():
     cookies = client['cookies']
 
     return cookies.find().sort('update_time', -1).limit(1)[0]
+
+
+def send_mail(to, subject, template, **kwargs):
+    html_body = render_template(template + '.html', **kwargs)
+
+    send_async.delay(subject=subject,
+                     author=secret.mail_username,
+                     to=to,
+                     plain=html_body,
+                     rich=html_body)
