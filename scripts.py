@@ -1,6 +1,6 @@
 import schedule
 import time
-from hp_face_recognition import job
+from app.service.hp_face_recognition import job
 
 
 schedule.every().hours.do(job)

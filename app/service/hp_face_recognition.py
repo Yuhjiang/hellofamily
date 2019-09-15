@@ -1,8 +1,8 @@
 """
 早安家族人脸识别脚本
 """
-from service.utils import image_to_base64, download_picture, get_cookies, send_mail
-from service.service_config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
+from .utils import image_to_base64, download_picture, get_cookies, send_mail
+from .service_config import image_path, Mongodb_uri, User_Agent, APP_ID, API_KEY, SECRET_KEY
 import os
 import time
 from pymongo import MongoClient, errors
@@ -156,6 +156,7 @@ def fetch_pictures_info(start=1, end=1, save=False, download=False):
     for page in range(start, end + 1):
         url = 'http://photo.weibo.com/photos/get_all?uid=2019518032&album_id=3555502164890927&count=30&page={}' \
               '&type=3&__rnd=1546678278092'.format(page)
+        logging.info('正在下载: {}'.format(url))
         response = fetch_json_response(url)
         photo_list = response['data']['photo_list']
 
@@ -195,11 +196,16 @@ def fetch_pictures_info(start=1, end=1, save=False, download=False):
 
 
 def job():
-    fetch_pictures_info(1, 10, save=True, download=True)
+    logging.info('开始执行下载任务')
+    try:
+        fetch_pictures_info(1, 10, save=True, download=True)
+    except Exception as e:
+        logging.error(e)
+        send_mail(task_name='hp_face_recognition', error_log=e)
     face_search()
 
 
 if __name__ == '__main__':
-    fetch_pictures_info(1, 10, save=True, download=True)
-    face_search()
-    send_mail()
+    # fetch_pictures_info(1, 10, save=True, download=True)
+    # face_search()
+    job()

@@ -1,11 +1,14 @@
 import requests
 import os
 import base64
-from service.service_config import Mongodb_uri
+from .service_config import Mongodb_uri
 import pymongo
 from app.tasks import send_async
-from flask import render_template
+from jinja2 import Environment, PackageLoader
 import secret
+
+
+env = Environment(loader=PackageLoader('app', 'templates'))
 
 
 def valid_image(image):
@@ -55,8 +58,9 @@ def get_cookies():
     return cookies.find().sort('update_time', -1).limit(1)[0]
 
 
-def send_mail(to, subject, template, **kwargs):
-    html_body = render_template(template + '.html', **kwargs)
+def send_mail(to='jiang.yuhao0809@gmail.com', subject='运行报错', path='mail/error_notification', **kwargs):
+    template = env.get_template(path + '.html')
+    html_body = template.render(**kwargs)
 
     send_async.delay(subject=subject,
                      author=secret.mail_username,
