@@ -1,8 +1,14 @@
-from . import face, mongodb
-from .forms import CpForm, FaceForm
-from flask import render_template, request, jsonify
 from datetime import datetime
+
+from flask import render_template, request, redirect, url_for
+from flask_login import login_required
+
 from app.utils import paginate
+from ..decorators import permission_required
+from service.utils import update_cookies
+from . import face, mongodb
+from .forms import CpForm, FaceForm, UpdateCookie
+from ..models.role import Permission
 
 
 def search_members(member):
@@ -101,3 +107,23 @@ def cp():
 
     search = {'member1': member1, 'member2': member2, 'start_time': start_time, 'end_time': end_time}
     return render_template('face/cp.html', form=form, cpform=cpform, images=images, pagination=pagination, endpoint='face.cp', search=search)
+
+
+@login_required
+@face.route('/setting/', methods=['GET'])
+def setting():
+    cookie_form = UpdateCookie()
+
+    return render_template('face/setting.html', cookie_form=cookie_form)
+
+
+@login_required
+@permission_required(Permission.ADMIN)
+@face.route('/update_cookie', methods=['POST'])
+def update_cookie():
+    cookie_form = UpdateCookie()
+
+    if cookie_form.validate_on_submit():
+        update_cookies(cookie_form.cookie.data)
+
+    return redirect(url_for('.setting'))

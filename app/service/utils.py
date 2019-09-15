@@ -6,6 +6,7 @@ import pymongo
 from app.tasks import send_async
 from jinja2 import Environment, PackageLoader
 import secret
+from datetime import datetime
 
 
 env = Environment(loader=PackageLoader('app', 'templates'))
@@ -56,6 +57,14 @@ def get_cookies():
     cookies = client['cookies']
 
     return cookies.find().sort('update_time', -1).limit(1)[0]
+
+
+def update_cookies(cookie):
+    db = pymongo.MongoClient(Mongodb_uri)
+    client = db['helloproject']
+    cookies = client['cookies']
+
+    return cookies.insert_one({'cookie': cookie, 'update_time': datetime.now()})
 
 
 def send_mail(to='jiang.yuhao0809@gmail.com', subject='运行报错', path='mail/error_notification', **kwargs):

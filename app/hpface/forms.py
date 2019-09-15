@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, DateField, SubmitField
+from wtforms import SelectField, DateField, SubmitField, StringField
 from wtforms.validators import DataRequired
 from . import mongodb
 from datetime import datetime
@@ -50,3 +50,11 @@ class CpForm(FlaskForm):
             choices.append((member['name_en'], member['name_jp']))
         self.member1.choices = choices
         self.member2.choices = choices
+
+
+class UpdateCookie(FlaskForm):
+    """
+    更新Cookie值
+    """
+    cookie = StringField('Cookie', validators=[DataRequired()])
+    submit = SubmitField('更新')
